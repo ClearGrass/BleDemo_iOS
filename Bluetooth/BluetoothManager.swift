@@ -8,23 +8,44 @@
 import Foundation
 import CoreBluetooth
 
+typealias BlueAcceptCallback = (_ peripheral: CBPeripheral, _ advertisementData: [CBUUID: Data], _ rssi: Int) -> Void
+
 class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
-    
+   
     static let shared = BluetoothManager()
+    var bleState = CBManagerState.unknown
     var peripherals = [UUID: CBPeripheral]()
     var peripheralCallbacks = [UUID: PeripheralCallback]()
-    
+    var onBlueAccept: BlueAcceptCallback? = nil
+    var onBleStateChange: ((_ state: CBManagerState) -> Void)? = nil
     @objc dynamic var _tempDiscoverCharaCounter = 0;
     private var centralManager: CBCentralManager!
     private override init() {
         centralManager = CBCentralManager(delegate: nil, queue: nil)
     }
     
-    func scan() {
+    func setOnBleStateChanged(callback: @escaping (_ state: CBManagerState) -> Void) {
         centralManager.delegate = self
-        centralManager.scanForPeripherals(withServices: nil, options: [
+        callback(centralManager.state)
+        onBleStateChange = callback
+    }
+    
+    var isScaning: Bool {
+        get {centralManager?.isScanning ?? false}
+    }
+    func scan(onAccept: @escaping BlueAcceptCallback) {
+        centralManager.delegate = self
+        self.onBlueAccept = onAccept
+        if (isScaning) {
+            centralManager.stopScan()
+        }
+        centralManager.scanForPeripherals(withServices: [CBUUID(string: "FDCD")], options: [
             CBCentralManagerScanOptionAllowDuplicatesKey: true
         ])
+    }
+    func stopScan() {
+        self.onBlueAccept = nil
+        centralManager.stopScan()
     }
     func connect(_ identifier: UUID, withCallback callback: PeripheralCallback) {
         if let peripheral = peripherals[identifier] {
@@ -44,12 +65,25 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
 
     // MARK: CentralManager delegate
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        
+        print("blue", "centralManagerDidUpdateState(state: \(central.state.rawValue))")
+        bleState = central.state
+        onBleStateChange?(central.state)
     }
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         peripherals[peripheral.identifier] = peripheral
         
+        let serviceDatas = advertisementData[CBAdvertisementDataServiceDataKey] as! [CBUUID: Data]
+        for data1 in serviceDatas.enumerated() {
+            let serviceuuid = data1.element.key.uuidString
+            let data = data1.element.value
+            if (serviceuuid == "FDCD") {
+                self.onBlueAccept?(peripheral, serviceDatas, RSSI.intValue)
+                break;
+            }
+        }
+        
     }
+
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         peripheralCallbacks[peripheral.identifier]?.onPeripheralConnected(peripheral)
     }

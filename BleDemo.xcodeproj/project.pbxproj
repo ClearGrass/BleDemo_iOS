@@ -20,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B52734E12B6B959400FB37E4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		B58268FA2B6B507B00F1ED22 /* DataExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExtensions.swift; sourceTree = "<group>"; };
 		B58268FC2B6B74BF00F1ED22 /* ScanResultDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanResultDevice.swift; sourceTree = "<group>"; };
 		B58268FE2B6B75D900F1ED22 /* ScanResultParsed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanResultParsed.swift; sourceTree = "<group>"; };
@@ -65,6 +66,7 @@
 		B588B7152B68FC330062CAFD /* BleDemo */ = {
 			isa = PBXGroup;
 			children = (
+				B52734E12B6B959400FB37E4 /* Info.plist */,
 				B588B7162B68FC330062CAFD /* BleDemoApp.swift */,
 				B588B7182B68FC330062CAFD /* ContentView.swift */,
 				B58268FC2B6B74BF00F1ED22 /* ScanResultDevice.swift */,
@@ -306,6 +308,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BleDemo/Info.plist;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Blue Tooth Smile";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -344,6 +348,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BleDemo/Info.plist;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Blue Tooth Smile";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

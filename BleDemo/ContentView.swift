@@ -6,52 +6,68 @@
 //
 
 import SwiftUI
-
+import CoreBluetooth
 struct ContentView: View {
+    @State private var bleStateReady = false
     @State var selectedPrd = 0
     @State var onlyPairing = false
     @State private var isScanning = false
-    @State var scanDevice: [ScanResultDevice] = [
-        ScanResultDevice(name: "FakeDeivce", uuid: UUID(), rssi: -40, data: ScanResultParsed(
-            frameControl: FrameControl(
-                binding: true
-            ), productId: 0x0d, mac: "AABBCCDDEEFF", rawData: Data())
-        ),
-        ScanResultDevice(name: "FakeDeivce", uuid: UUID(), rssi: -40, data: ScanResultParsed(
-            frameControl: FrameControl(
-                binding: false
-            ), productId: 0x0d, mac: "AABBCCDDEEFF", rawData: Data())
-        )
-    ]
+    @State var scanDevice: [ScanResultDevice] = []
+    var filtedScanDevice: [ScanResultDevice] {
+        get {
+            if (!onlyPairing && selectedPrd == 0) {
+                return scanDevice
+            }
+            return scanDevice.filter { d in
+                if (onlyPairing && d.data.frameControl.binding == false) {
+                    return false
+                }
+                if (selectedPrd > 0 && d.data.productId != selectedPrd) {
+                    return false
+                }
+                return true
+            }
+        }
+    }
+    
     @State var filterText = ""
-
+    
     var body: some View {
         NavigationView {
             VStack() {
                 FilterBar(
+                    bleReady: $bleStateReady,
                     selectedPrd: $selectedPrd, onlyPairing: $onlyPairing, isLoading: $isScanning
-                )
+                ) { scan in
+                    if (scan) {
+                        scanDevice.removeAll()
+                        isScanning = true
+                        BluetoothManager.shared.scan { peripheral, adver, rssi  in
+                            let device = ScanResultDevice(
+                                peripheral: peripheral,
+                                data: adver,
+                                rssi: rssi
+                            )
+                            scanDevice.removeAll { element in
+                                return element == device
+                            }
+                            scanDevice.append(device)
+                        }
+                    } else {
+                        isScanning = false
+                        BluetoothManager.shared.stopScan()
+                    }
+                }
                 TextField("过滤 MAC 地址或设备名称", text: $filterText)
                     .padding()
                 List {
-                    Section {
-                        NavigationLink(destination: DetailPage(
-                            uuid: UUID(),
-                            deviceName: "tome")
-                        ) {
-                            Text("Item 1")
-                        }
-                    }
-                    ForEach(onlyPairing ? try! scanDevice.filter { d in
-                        d.data.frameControl.binding
-                    } : scanDevice) { device in
-                        Section {
+                    ForEach(filtedScanDevice) { device in
+                        Section(content: {
                             NavigationLink(destination: DetailPage(
-                                uuid: device.uuid,
+                                uuid: device.identifier,
                                 deviceName: device.name,
                                 advertisingData: device.data
-                            )
-                            ) {
+                            )) {
                                 VStack(alignment: .leading) {
                                     HStack {
                                         Text(device.name)
@@ -59,60 +75,80 @@ struct ContentView: View {
                                         Text("\(device.rssi)")
                                     }
                                     HStack {
-                                        Text(device.data.mac)
+                                        if (device.mac.starts(with: "06:66")) {
+                                            Text("clientid: \(device.clientId)")
+                                        } else {
+                                            Text("MAC: \(device.mac)")
+                                        }
+                                    }
+                                    
+                                    HStack {
+                                        Text("PID:\(device.productId.display(prefix: true)) (\(device.productId))").foregroundStyle(.primary)
                                         Spacer()
-                                        if (device.data.frameControl.binding) {
+                                        if (device.isBinding) {
                                             Text("binding").foregroundStyle(Color.red)
                                         }
                                     }
-                                    Text(device.uuid.uuidString)
-                                    Text(device.data.rawData.display())
+                                    Divider()
+                                    Text(device.data.rawData.display(dimter: " "))
                                 }
                             }
-                        }.padding(0)
-                    }
-                    
-                    
-                }.listSectionSpacing(10)
+                        }, footer: {
+                            Text(device.id)
+                        }).padding(0)
+                        
+                        
+                    }.listSectionSpacing(10)
+                }
             }
             .frame(alignment: .top)
             
+        }.onAppear {
+            BluetoothManager.shared.setOnBleStateChanged { state in
+                bleStateReady = state == CBManagerState.poweredOn
+            }
         }
     }
 }
 
 struct FilterBar: View {
+    @Binding var bleReady: Bool
     @Binding var selectedPrd: Int
     @Binding var onlyPairing: Bool
     @Binding var isLoading: Bool
+    var onClickButton: (_ startScan: Bool) -> Void
     var body: some View {
         HStack(content: {
-            Text("产品：")
+            Text("产品")
             Picker("products", selection: $selectedPrd) {
-                Text("不限").tag(0)
-                Text("网关").tag(1)
-                Text("门窗传感器").tag(2)
-                Text("动作感应器").tag(3)
-            }
+                Text("不限").lineLimit(1).tag(0)
+                Text("网关").lineLimit(1).tag(0xd)
+                Text("门窗传感器").lineLimit(1).tag(0x4)
+                Text("人体传感器").lineLimit(1).tag(0x12)
+            }.frame(width: 120)
             .disabled(isLoading)
             Toggle(isOn: $onlyPairing) {
-                Text("仅binding：")
+                Text("仅binding:").lineLimit(1)
             }
             .disabled(isLoading)
             .padding(.trailing, 35)
             Spacer()
-            if isLoading {
-                Button(action: {
-                    isLoading = false
-                }) {
-                    Image(systemName: "xmark")
+            if (bleReady) {
+                if isLoading {
+                    Button(action: {
+                        onClickButton(false)
+                    }) {
+                        Image(systemName: "xmark")
+                    }.disabled(!bleReady)
+                } else {
+                    Button(action: {
+                        onClickButton(true)
+                    }) {
+                        Image(systemName: "magnifyingglass")
+                    }.disabled(!bleReady)
                 }
             } else {
-                Button(action: {
-                    isLoading = true
-                }) {
-                    Image(systemName: "magnifyingglass")
-                }
+                Image(systemName: "gear.badge.questionmark")
             }
         }).padding(Edge.Set.vertical, 0)
             .padding(.horizontal)
@@ -133,7 +169,9 @@ struct DetailPage: View {
             List() {
                 Section(content: {
                     Text("0x1122334455667788")
-                }, header: {Text(deviceName)})
+                }, header: {Text(deviceName)}) {
+                    Text("\(uuid.uuidString)")
+                }
                 Section {
                     ForEach(debugCommands.indices, id: \.self) { index in
                         Text(
