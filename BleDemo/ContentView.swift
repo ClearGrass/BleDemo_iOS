@@ -11,7 +11,20 @@ struct ContentView: View {
     @State var selectedPrd = 0
     @State var onlyPairing = false
     @State private var isScanning = false
+    @State var scanDevice: [ScanResultDevice] = [
+        ScanResultDevice(name: "FakeDeivce", uuid: UUID(), rssi: -40, data: ScanResultParsed(
+            frameControl: FrameControl(
+                binding: true
+            ), productId: 0x0d, mac: "AABBCCDDEEFF", rawData: Data())
+        ),
+        ScanResultDevice(name: "FakeDeivce", uuid: UUID(), rssi: -40, data: ScanResultParsed(
+            frameControl: FrameControl(
+                binding: false
+            ), productId: 0x0d, mac: "AABBCCDDEEFF", rawData: Data())
+        )
+    ]
     @State var filterText = ""
+
     var body: some View {
         NavigationView {
             VStack() {
@@ -22,15 +35,44 @@ struct ContentView: View {
                     .padding()
                 List {
                     Section {
-                        NavigationLink(destination: DetailPage()) {
+                        NavigationLink(destination: DetailPage(
+                            uuid: UUID(),
+                            deviceName: "tome")
+                        ) {
                             Text("Item 1")
                         }
                     }
-                    Section {
-                        NavigationLink(destination: DetailPage()) {
-                            Text("Item 1")
-                        }
-                    }.padding(0)
+                    ForEach(onlyPairing ? try! scanDevice.filter { d in
+                        d.data.frameControl.binding
+                    } : scanDevice) { device in
+                        Section {
+                            NavigationLink(destination: DetailPage(
+                                uuid: device.uuid,
+                                deviceName: device.name,
+                                advertisingData: device.data
+                            )
+                            ) {
+                                VStack(alignment: .leading) {
+                                    HStack {
+                                        Text(device.name)
+                                        Spacer()
+                                        Text("\(device.rssi)")
+                                    }
+                                    HStack {
+                                        Text(device.data.mac)
+                                        Spacer()
+                                        if (device.data.frameControl.binding) {
+                                            Text("binding").foregroundStyle(Color.red)
+                                        }
+                                    }
+                                    Text(device.uuid.uuidString)
+                                    Text(device.data.rawData.display())
+                                }
+                            }
+                        }.padding(0)
+                    }
+                    
+                    
                 }.listSectionSpacing(10)
             }
             .frame(alignment: .top)
@@ -60,7 +102,11 @@ struct FilterBar: View {
             .padding(.trailing, 35)
             Spacer()
             if isLoading {
-                ProgressView()
+                Button(action: {
+                    isLoading = false
+                }) {
+                    Image(systemName: "xmark")
+                }
             } else {
                 Button(action: {
                     isLoading = true
@@ -73,31 +119,61 @@ struct FilterBar: View {
     }
 }
 
+
 struct DetailPage: View {
+    var uuid = UUID()
+    var deviceName = "蓝牙设备"
+    var advertisingData: ScanResultParsed? = nil
+    @State var toCommonCharacteristic = true
+    @State var debugCommands: [Command] = [
+        Command("init","0000",nil)
+    ]
     var body: some View {
         VStack() {
             List() {
-                Section {
+                Section(content: {
                     Text("0x1122334455667788")
-                }
+                }, header: {Text(deviceName)})
                 Section {
-                    Text("asdf")
-                    Text("asdf")
+                    ForEach(debugCommands.indices, id: \.self) { index in
+                        Text(
+                            ((debugCommands[index].action
+                             + "   -> "
+                             + debugCommands[index].uuid
+                             ) + (debugCommands[index].data?.display(prefix:"\n0x") ?? "")
+                            ).trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                        )
+                    }
                 }
             }
             Inputer(
                 enabled: true,
-                targetUuid: "0001",
+                targetUuid: toCommonCharacteristic ? "0x0001" : "0x0015",
                 menuItems: [
-                    ("AP LIST(07)", "0107"),
-                    ("连接WIFI(01)", ""),
-                    ("client_id(1E)", "011E")
-                ]
+                    ("写到0001", "0x0001", { index in
+                        toCommonCharacteristic = true
+                        return nil
+                    }),
+                    ("写到0015", "0x0015", { index in
+                        toCommonCharacteristic = false
+                        return nil
+                    }),
+                    ("", "", nil),
+                    ("AP LIST(07)", "0107", nil),
+                    ("连接WIFI(01)", "", { index in
+                        return "0F012241414141222c224243444546474822"
+                    }),
+                    ("client_id(1E)", "011E", nil)
+                ].reversed()
             ) { message in
-                                
+                debugCommands.append(Command(
+                    "write",
+                    toCommonCharacteristic ? "0x0001" : "0x0015",
+                    QpUtils.hexToData(hexString: message)
+                ))
+                
             }
-        }.navigationTitle("asdf")
-            
+        }.navigationTitle(advertisingData?.mac ?? "MAC EMPTY")
     }
 }
 
@@ -105,16 +181,32 @@ struct Inputer: View {
     @State var inputText = ""
     let enabled: Bool
     let targetUuid: String
-    let menuItems: Array<(String, String)>
+    let menuItems: Array<(text: String, hex: String, onMenuClick: ((Int)->String?)? )>
     let onSendMessage: (String) -> Void
     var body: some View {
         VStack {
             HStack {
-                Button(action: {
-                    onSendMessage(inputText.uppercased())
-                }) {
-                    Image(systemName: "filemenu.and.selection")
-                }.padding()
+                Menu {
+                    ForEach(0 ..< menuItems.count) { index in
+                        let (text, hex, onClick) = menuItems[index]
+                        if (text.isEmpty) {
+                            Divider()
+                        } else {
+                            Button(text, systemImage: targetUuid == hex ? "checkmark" : "", role: .cancel) {
+                                if (!hex.isEmpty) {
+                                    onSendMessage(hex)
+                                }
+                                
+                                if let newHex = onClick?(index) {
+                                    onSendMessage(newHex)
+                                }
+                            }
+                        }
+                    
+                    }
+                } label: {
+                    Image(systemName: "filemenu.and.selection").padding()
+                }
                 
                 TextField("Command", text: $inputText, onEditingChanged: { changed in
                     if (changed) {
@@ -131,7 +223,7 @@ struct Inputer: View {
                     
                 
                 Button(action: {
-                    
+                    onSendMessage(inputText)
                 }, label: {
                     Image(systemName: "paperplane")
                 }).padding()
@@ -174,7 +266,5 @@ struct KeyboardKey: View {
     }
 }
 #Preview {
-    NavigationView {
-        ContentView()
-    }
+    ContentView()
 }

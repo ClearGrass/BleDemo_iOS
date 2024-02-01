@@ -11,6 +11,9 @@ import CoreBluetooth
 typealias UUIDAndData = (CBUUID, Data)
 typealias ValueCallback<T> = ((T) -> ())?
 typealias ActionResult = ValueCallback<Bool>
+
+typealias Command = (action: String, uuid: String, data: Data?)
+
 protocol OnConnectionStatusCallback {
     func onPeripheralConnected(_ peripheral: CBPeripheral);
     func onPeripheralDisconnected(_ peripheral: CBPeripheral, withError error: Error?);
@@ -38,7 +41,9 @@ class QingpingDevice: NSObject, CBPeripheralDelegate, PeripheralCallback {
     private var notifyCallback: ValueCallback<UUIDAndData> = nil;
     private var readRSSICallback: ValueCallback<Int> = nil;
     private var writeCallback: ActionResult = nil;
-    
+    private var debugCommandListener: (Command) -> Void = { command in
+        print("blue", "debugCommandListener not set. ", command)
+    }
     
     init(peripheral: CBPeripheral, advertisementData: [String : Any], rssi: Int) {
         self.peripheral = peripheral
@@ -70,12 +75,12 @@ class QingpingDevice: NSObject, CBPeripheralDelegate, PeripheralCallback {
         
     }
     
-    func writeInternalCommand() {
-        
+    func writeInternalCommand(data: Data) {
+        debugCommandListener(Command("write", "0001", data))
     }
     
-    func writeCommand() {
-        
+    func writeCommand(data: Data) {
+        debugCommandListener(Command("write", "0015", data))
     }
     
     func writeValue(_ data: Data, toCharacteristic characteristic: CBUUID, inService service: CBUUID) {
@@ -203,21 +208,19 @@ class QpUtils {
             return Data([1, protocolType])
         }
     }
-    static func hexToData(randomHex1: String) -> Data {
-        let randomHex = try! randomHex1.trimmingPrefix("0x").replacing(Regex("[^0-9A-Fa-f]"), with: "").uppercased()
+    static func hexToData(hexString: String) -> Data {
+        let randomHex = try! hexString.trimmingPrefix("0x").replacing(Regex("[^0-9A-Fa-f]"), with: "").uppercased()
 
         var data = Data(capacity: randomHex.count / 2)
-        let regex = try! NSRegularExpression(pattern: "[0-9A-F]{1,2}", options: .caseInsensitive)
-        regex.enumerateMatches(in: randomHex, range: NSRangeFromString(randomHex)) { match, _, _ in
-            let byteString = (randomHex as NSString).substring(with: match!.range)
-            let num = UInt8(byteString, radix: 16)!
+        
+        let regex = try! Regex("[0-9ABCDEF]{2}")
+        randomHex.matches(of: regex).forEach { checkResult in
+            let bs = randomHex[checkResult.range]
+            let num = UInt8(bs, radix: 16)!
             data.append(num)
         }
         
         return data
         
-    }
-    static func stringToData(string: String) -> Data {
-        return string.data(using: String.Encoding.utf8)!
     }
 }
