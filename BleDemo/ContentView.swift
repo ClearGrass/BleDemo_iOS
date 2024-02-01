@@ -12,10 +12,11 @@ struct ContentView: View {
     @State var selectedPrd = 0
     @State var onlyPairing = false
     @State private var isScanning = false
+    @State var filterText = ""
     @State var scanDevice: [ScanResultDevice] = []
     var filtedScanDevice: [ScanResultDevice] {
         get {
-            if (!onlyPairing && selectedPrd == 0) {
+            if (!onlyPairing && selectedPrd == 0 && filterText.isEmpty) {
                 return scanDevice
             }
             return scanDevice.filter { d in
@@ -25,12 +26,14 @@ struct ContentView: View {
                 if (selectedPrd > 0 && d.data.productId != selectedPrd) {
                     return false
                 }
+                if (!filterText.isEmpty) {
+                    return d.name.lowercased().contains(filterText.lowercased()) || d.mac.replacing(try! Regex("[^0-9A-F]"), with: "").contains(filterText.uppercased())
+                }
                 return true
             }
         }
     }
     
-    @State var filterText = ""
     
     var body: some View {
         NavigationView {
@@ -52,6 +55,7 @@ struct ContentView: View {
                                 return element == device
                             }
                             scanDevice.append(device)
+                            scanDevice.sort()
                         }
                     } else {
                         isScanning = false

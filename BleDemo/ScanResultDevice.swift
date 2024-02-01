@@ -7,7 +7,8 @@
 
 import Foundation
 import CoreBluetooth
-struct ScanResultDevice: Equatable, Identifiable {
+struct ScanResultDevice: Equatable, Identifiable, Comparable {
+    
     init(peripheral: CBPeripheral, data: [CBUUID : Data], rssi: Int) {
         self.name = peripheral.name ?? ""
         self.identifier = peripheral.identifier
@@ -39,5 +40,8 @@ struct ScanResultDevice: Equatable, Identifiable {
     }
     static func ==(lhs: ScanResultDevice, rhs: ScanResultDevice) -> Bool {
         return lhs.identifier == rhs.identifier
+    }
+    static func < (lhs: ScanResultDevice, rhs: ScanResultDevice) -> Bool {
+        return lhs.rssi > rhs.rssi
     }
 }
