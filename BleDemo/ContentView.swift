@@ -232,6 +232,7 @@ struct DetailPage: View {
                         Button(action: {
                             print("blue", "start disconnect")
                             isConnected = false
+                            qingpingDevice.disconnect()
                         }) {
                             Image(systemName: "cable.connector.slash")
                         }
@@ -243,10 +244,12 @@ struct DetailPage: View {
                                 onConnected: { _ in
                                     print("blue", "device connected")
                                     isConnected = true
+                                    isLoading = false
                                 },
                                 onDisconnected: { _ in
                                     print("blue", "device disconnected")
                                     isConnected = false
+                                    isLoading = false
                                 }
                             ))
                         }) {
