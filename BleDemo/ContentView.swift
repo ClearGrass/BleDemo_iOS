@@ -165,8 +165,8 @@ struct DetailPage: View {
     var deviceName = "蓝牙设备"
     var advertisingData: ScanResultParsed? = nil
     @State var toCommonCharacteristic = true
-    @State var debugCommands: [Command] = [
-        Command("init","0000",nil)
+    @State var debugCommands: [DebugCommand] = [
+        DebugCommand("init","0000",nil)
     ]
     var body: some View {
         VStack() {
@@ -208,7 +208,7 @@ struct DetailPage: View {
                     ("client_id(1E)", "011E", nil)
                 ].reversed()
             ) { message in
-                debugCommands.append(Command(
+                debugCommands.append(DebugCommand(
                     "write",
                     toCommonCharacteristic ? "0x0001" : "0x0015",
                     QpUtils.hexToData(hexString: message)
@@ -289,9 +289,8 @@ struct Inputer: View {
                 KeyboardKey(text: "F") {
                     inputText += "F"
                 }
-               
             }.padding(.horizontal)
-        }
+        }.disabled(enabled)
     }
 }
 
@@ -308,5 +307,5 @@ struct KeyboardKey: View {
     }
 }
 #Preview {
-    ContentView()
+    DetailPage()
 }
