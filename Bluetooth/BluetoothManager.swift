@@ -62,6 +62,10 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
         centralManager.delegate = self
         centralManager.cancelPeripheralConnection(peripheral)
     }
+    
+    func getPeripheral(byIdentifier uuid: UUID) -> CBPeripheral? {
+        return peripherals[uuid]
+    }
 
     // MARK: CentralManager delegate
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
@@ -106,6 +110,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
         if (error != nil) {
             return;
         }
+        _tempDiscoverCharaCounter -= 1;
         if (_tempDiscoverCharaCounter == 0) {
             peripheralCallbacks[peripheral.identifier]?.onPeripheralReady(peripheral)
         }

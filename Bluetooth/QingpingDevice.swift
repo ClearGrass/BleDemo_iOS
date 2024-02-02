@@ -22,8 +22,7 @@ typealias DebugCommand = (action: String, uuid: String, data: Data?)
 
 class QingpingDevice: NSObject, CBPeripheralDelegate, PeripheralCallback {
     let peripheral: CBPeripheral
-    let advertisementData:  [String : Any]
-    let rssi: Int
+    var rssi: Int
     
     var name: String {
         get {
@@ -41,19 +40,17 @@ class QingpingDevice: NSObject, CBPeripheralDelegate, PeripheralCallback {
     private var connectCallback: ActionResult = nil;
     private var registerNotifyCallback: ActionResult = nil;
     private var readCallback: ValueCallback<UUIDAndData> = nil;
-    private var notifyCallback: ValueCallback<UUIDAndData> = nil;
     private var readRSSICallback: ValueCallback<Int> = nil;
     private var writeCallback: ActionResult = nil;
     
     private let reponseCollector = ResponseCollector();
     
     private var debugCommandListener: (DebugCommand) -> Void = { command in
-        print("blue", "debugCommandListener not set. ", command)
+        print("blue", "debugCommandListener not set. ", command, command.data?.display())
     }
     
-    init(peripheral: CBPeripheral, advertisementData: [String : Any], rssi: Int) {
+    init(peripheral: CBPeripheral, rssi: Int = -100) {
         self.peripheral = peripheral
-        self.advertisementData = advertisementData
         self.rssi = rssi
     }
     private func connect(connectionChange: ConnectionStatusChanged) {
@@ -153,7 +150,10 @@ class QingpingDevice: NSObject, CBPeripheralDelegate, PeripheralCallback {
         peripheral.writeData(data, toCharacterisitc: characteristic, inService: service)
     }
     
-    func readValueFrom(_ characteristic: CBUUID, inService service: CBUUID) {
+    func readValueFrom(_ characteristic: CBUUID, inService service: CBUUID, responder: @escaping CommandResponder) {
+        self.readCallback =  { uuidAndData in
+            responder(uuidAndData.data)
+        }
         peripheral.readDataFrom(characteristic, inService: service)
     }
     // MARK: PeripheralCallback
@@ -195,15 +195,13 @@ class QingpingDevice: NSObject, CBPeripheralDelegate, PeripheralCallback {
     }
     
     func onValueUpdated(_ value: Data?, peripheral: CBPeripheral, characteristic: CBCharacteristic) {
-        if let readback = readCallback {
-            readCallback = nil
-            if (value != nil) {
-                readback((characteristic.uuid, value!))
-            }
-        } else if let notifyCallback = notifyCallback {
-            if (value != nil) {
-                notifyCallback((characteristic.uuid, value!))
-            }
+        if let readCallback = self.readCallback {
+            self.readCallback = nil
+            debugCommandListener(DebugCommand(action: "read", uuid: characteristic.uuid.simple(), data: value!))
+            readCallback((characteristic.uuid, value!))
+        } else {
+            debugCommandListener(DebugCommand(action: "notify", uuid: characteristic.uuid.simple(), data: value!))
+            reponseCollector.collect(fromUUID: characteristic.uuid, data: value!)
         }
     }
 }
@@ -237,6 +235,7 @@ extension CBPeripheral {
     }
     
     func readDataFrom(_ characteristic: CBUUID, inService service: CBUUID) {
+
         if let chara = self.findCharacteristic(withUUID: characteristic, inServiceUUID: service) {
             self.readValue(for: chara)
         }

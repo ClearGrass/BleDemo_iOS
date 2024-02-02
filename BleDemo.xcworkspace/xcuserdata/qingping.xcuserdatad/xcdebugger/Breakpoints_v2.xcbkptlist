@@ -3,4 +3,196 @@
    uuid = "C0FC2474-B83E-44CE-881E-F371915E4EB5"
    type = "0"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "AC9ED914-3383-4F67-A1F7-98E4CE67749D"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Bluetooth/QingpingDevice.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "106"
+            endingLineNumber = "106"
+            landmarkName = "connectBind(tokenString:connectionChange:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "AC9ED914-3383-4F67-A1F7-98E4CE67749D - c4b0d34badbc21e3"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BleDemo.QingpingDevice.connectBind(tokenString: Swift.String, connectionChange: (onConnected: Swift.Optional&lt;(__C.CBPeripheral) -&gt; ()&gt;, onDisconnected: Swift.Optional&lt;((peripheral: __C.CBPeripheral, error: Swift.Optional&lt;Swift.Error&gt;)) -&gt; ()&gt;)) -&gt; ()"
+                  moduleName = "BleDemo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/qingping/Work/BleDemo/Bluetooth/QingpingDevice.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "106"
+                  endingLineNumber = "106"
+                  offsetFromSymbolStart = "108">
+               </Location>
+               <Location
+                  uuid = "AC9ED914-3383-4F67-A1F7-98E4CE67749D - 3dfc8b54fa9613a4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__C.CBPeripheral) -&gt; () in BleDemo.QingpingDevice.connectBind(tokenString: Swift.String, connectionChange: (onConnected: Swift.Optional&lt;(__C.CBPeripheral) -&gt; ()&gt;, onDisconnected: Swift.Optional&lt;((peripheral: __C.CBPeripheral, error: Swift.Optional&lt;Swift.Error&gt;)) -&gt; ()&gt;)) -&gt; ()"
+                  moduleName = "BleDemo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/qingping/Work/BleDemo/Bluetooth/QingpingDevice.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "107"
+                  endingLineNumber = "107"
+                  offsetFromSymbolStart = "132">
+               </Location>
+               <Location
+                  uuid = "AC9ED914-3383-4F67-A1F7-98E4CE67749D - 3dfc8b54fa961245"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__C.CBPeripheral) -&gt; () in BleDemo.QingpingDevice.connectBind(tokenString: Swift.String, connectionChange: (onConnected: Swift.Optional&lt;(__C.CBPeripheral) -&gt; ()&gt;, onDisconnected: Swift.Optional&lt;((peripheral: __C.CBPeripheral, error: Swift.Optional&lt;Swift.Error&gt;)) -&gt; ()&gt;)) -&gt; ()"
+                  moduleName = "BleDemo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/qingping/Work/BleDemo/Bluetooth/QingpingDevice.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "106"
+                  endingLineNumber = "106"
+                  offsetFromSymbolStart = "132">
+               </Location>
+               <Location
+                  uuid = "AC9ED914-3383-4F67-A1F7-98E4CE67749D - 3e96622e86a18a35"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Bool) -&gt; () in closure #1 (__C.CBPeripheral) -&gt; () in BleDemo.QingpingDevice.connectBind(tokenString: Swift.String, connectionChange: (onConnected: Swift.Optional&lt;(__C.CBPeripheral) -&gt; ()&gt;, onDisconnected: Swift.Optional&lt;((peripheral: __C.CBPeripheral, error: Swift.Optional&lt;Swift.Error&gt;)) -&gt; ()&gt;)) -&gt; ()"
+                  moduleName = "BleDemo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/qingping/Work/BleDemo/Bluetooth/QingpingDevice.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "107"
+                  endingLineNumber = "107"
+                  offsetFromSymbolStart = "124">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "02A167AD-796F-4E88-A2BB-5C6B7754D151"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Bluetooth/BluetoothManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "95"
+            endingLineNumber = "95"
+            landmarkName = "centralManager(_:didDisconnectPeripheral:error:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "02A167AD-796F-4E88-A2BB-5C6B7754D151 - df72ea89f70f9dc6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BleDemo.BluetoothManager.centralManager(_: __C.CBCentralManager, didDisconnectPeripheral: __C.CBPeripheral, error: Swift.Optional&lt;Swift.Error&gt;) -&gt; ()"
+                  moduleName = "BleDemo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/qingping/Work/BleDemo/Bluetooth/BluetoothManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "95"
+                  endingLineNumber = "95"
+                  offsetFromSymbolStart = "260">
+               </Location>
+               <Location
+                  uuid = "02A167AD-796F-4E88-A2BB-5C6B7754D151 - c31ef2883bec0013"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BleDemo.BluetoothManager.centralManager(_: __C.CBCentralManager, didFailToConnect: __C.CBPeripheral, error: Swift.Optional&lt;Swift.Error&gt;) -&gt; ()"
+                  moduleName = "BleDemo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/qingping/Work/BleDemo/Bluetooth/BluetoothManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "95"
+                  endingLineNumber = "95"
+                  offsetFromSymbolStart = "136">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "400C49A9-9E93-49DA-9D08-0ADEDD030F7E"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Bluetooth/BluetoothManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "99"
+            endingLineNumber = "99"
+            landmarkName = "centralManager(_:didFailToConnect:error:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "400C49A9-9E93-49DA-9D08-0ADEDD030F7E - c31ef2883bec0397"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BleDemo.BluetoothManager.centralManager(_: __C.CBCentralManager, didFailToConnect: __C.CBPeripheral, error: Swift.Optional&lt;Swift.Error&gt;) -&gt; ()"
+                  moduleName = "BleDemo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/qingping/Work/BleDemo/Bluetooth/BluetoothManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "99"
+                  endingLineNumber = "99"
+                  offsetFromSymbolStart = "156">
+               </Location>
+               <Location
+                  uuid = "400C49A9-9E93-49DA-9D08-0ADEDD030F7E - 76b64932e31a5b43"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BleDemo.BluetoothManager.peripheral(_: __C.CBPeripheral, didDiscoverServices: Swift.Optional&lt;Swift.Error&gt;) -&gt; ()"
+                  moduleName = "BleDemo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/qingping/Work/BleDemo/Bluetooth/BluetoothManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "100"
+                  endingLineNumber = "100"
+                  offsetFromSymbolStart = "104">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2EDD06A2-46C6-4B6F-BA72-D2BCDA5EEEE9"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Bluetooth/BluetoothManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "113"
+            endingLineNumber = "113"
+            landmarkName = "peripheral(_:didDiscoverCharacteristicsFor:error:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

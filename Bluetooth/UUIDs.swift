@@ -31,4 +31,18 @@ class UUIDHelper {
         }
         return CBUUID(string: uuidString)
     }
+    
+    static func simpler(uuidString: String) -> String {
+        return uuidString.lowercased().replacing("-0000-1000-8000-00805f9b34fb", with: "").replacing(try! Regex("^0000"), with: "")
+    }
+}
+extension UUID {
+    func simple() -> String {
+        return UUIDHelper.simpler(uuidString: self.uuidString)
+    }
+}
+extension CBUUID {
+    func simple() -> String {
+        return UUIDHelper.simpler(uuidString: self.uuidString)
+    }
 }

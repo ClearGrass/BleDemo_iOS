@@ -70,7 +70,10 @@ struct ContentView: View {
                             NavigationLink(destination: DetailPage(
                                 uuid: device.identifier,
                                 deviceName: device.name,
-                                advertisingData: device.data
+                                advertisingData: device.data,
+                                qingpingDevice: QingpingDevice(
+                                    peripheral: BluetoothManager.shared.getPeripheral(byIdentifier: device.identifier)!
+                                )
                             )) {
                                 VStack(alignment: .leading) {
                                     HStack {
@@ -164,15 +167,20 @@ struct DetailPage: View {
     var uuid = UUID()
     var deviceName = "蓝牙设备"
     var advertisingData: ScanResultParsed? = nil
+    
+    @State var isLoading = false
+    @State var isConnected = false
+    
     @State var toCommonCharacteristic = true
     @State var debugCommands: [DebugCommand] = [
         DebugCommand("init","0000",nil)
     ]
+    @State var qingpingDevice: QingpingDevice
     var body: some View {
         VStack() {
             List() {
                 Section(content: {
-                    Text("0x1122334455667788")
+                    Text((advertisingData?.rawData.display())!)
                 }, header: {Text(deviceName)}) {
                     Text("\(uuid.uuidString)")
                 }
@@ -189,7 +197,7 @@ struct DetailPage: View {
                 }
             }
             Inputer(
-                enabled: true,
+                enabled: !isLoading && isConnected,
                 targetUuid: toCommonCharacteristic ? "0x0001" : "0x0015",
                 menuItems: [
                     ("写到0001", "0x0001", { index in
@@ -215,7 +223,40 @@ struct DetailPage: View {
                 ))
                 
             }
-        }.navigationTitle(advertisingData?.mac ?? "MAC EMPTY")
+        }.navigationTitle(advertisingData?.mac ?? "MAC EMPTY").toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                if (isLoading) {
+                    ProgressView()
+                } else {
+                    if (isConnected) {
+                        Button(action: {
+                            print("blue", "start disconnect")
+                            isConnected = false
+                        }) {
+                            Image(systemName: "cable.connector.slash")
+                        }
+                    } else {
+                        Button(action: {
+                            print("blue", "start connect")
+                            isLoading = true
+                            qingpingDevice.connectBind(tokenString: "AABBCCDD112233440099", connectionChange: (
+                                onConnected: { _ in
+                                    print("blue", "device connected")
+                                    isConnected = true
+                                },
+                                onDisconnected: { _ in
+                                    print("blue", "device disconnected")
+                                    isConnected = false
+                                }
+                            ))
+                        }) {
+                            Image(systemName: "cable.connector")
+                        }
+                    }
+                }
+                
+            }
+        }
     }
 }
 
@@ -307,5 +348,7 @@ struct KeyboardKey: View {
     }
 }
 #Preview {
-    DetailPage()
+    NavigationView(content: {
+//        DetailPage()
+    })
 }
