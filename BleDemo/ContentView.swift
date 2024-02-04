@@ -164,6 +164,9 @@ struct FilterBar: View {
 
 
 struct DetailPage: View {
+    
+    @State var showConnectingDialog = false
+    @State var inputToken = "ABCDEFGHIJK"
     var uuid = UUID()
     var deviceName = "蓝牙设备"
     var advertisingData: ScanResultParsed? = nil
@@ -175,9 +178,25 @@ struct DetailPage: View {
     @State var debugCommands: [DebugCommand] = [
         DebugCommand("init","0000",nil)
     ]
-    @State var qingpingDevice: QingpingDevice
+    @State var qingpingDevice: QingpingDevice?
     var deviceMacParsedFromMac: String {
         return advertisingData?.mac ?? "none mac"
+    }
+    var onDeviceConnectionChanged: ConnectionStatusChanged {
+        return (
+            onConnected: { _ in
+                print("blue", "device connected")
+                debugCommands.append(DebugCommand("[Connected]", deviceMacParsedFromMac, nil))
+                isConnected = true
+            },
+            onDisconnected: { _ in
+                print("blue", "device disconnected")
+                debugCommands.append(DebugCommand("[Disonnected]", deviceMacParsedFromMac, nil))
+                isConnected = false
+                isLoading = false
+                toCommonCharacteristic = true
+            }
+        )
     }
     var body: some View {
         VStack() {
@@ -220,10 +239,8 @@ struct DetailPage: View {
                     ("client_id(1E)", "011E", nil)
                 ].reversed(): [])
             ) { message in
-                if (!toCommonCharacteristic) {
-                    // 通常是指网关的命令，或其它设备的高级命令
-                    qingpingDevice.writeCommand(command: QpUtils.hexToData(hexString: message)) { response in
-                        
+                sendMessage(message, toDevice: qingpingDevice!, toCommonCharacteristic: toCommonCharacteristic) { response in
+                    if (!toCommonCharacteristic) {
                         print("blue", "ble response  \(response.display())")
                         //这里把比较特殊的协议回应解析后显示到界面上中方便查看。
                         // WIFI列表
@@ -236,9 +253,7 @@ struct DetailPage: View {
                         if (response[1] == 0x01) {
                             debugCommands.append(DebugCommand("parse", (response[2] == 1) ? "连接WIFI成功" : "连接WIFI失败", response))
                         }
-                    }
-                } else {
-                    qingpingDevice.writeInternalCommand(command: QpUtils.hexToData(hexString: message)) { response in
+                    } else {
                         if (response[0].isFF() && response[1] == 0x1e) {
                             // 这是 client_id
                             debugCommands.append(DebugCommand(
@@ -250,12 +265,67 @@ struct DetailPage: View {
                     }
                 }
             }
+        }.confirmationDialog("请问执行【连接验证】还是执行【连接并绑定】设备？", isPresented: $showConnectingDialog, titleVisibility: .visible, actions: {
+            Button("连接验证") { [self]
+                print("blue", "start connect")
+                isLoading = true
+                
+                toCommonCharacteristic = true
+                debugCommands.append(DebugCommand("Connecting and Verify!",
+                    deviceMacParsedFromMac,
+                    QpUtils.wrapProtocol(1, data: inputToken.toData())
+                ))
+                
+                qingpingDevice?.connectVerify(tokenString: inputToken, connectionChange: self.onDeviceConnectionChanged){ verifyResult in
+                    print("blue", "connectVerify: = \(verifyResult)")
+                    debugCommands.append(DebugCommand(
+                        "[Verify] Result",
+                        verifyResult ? "SUCCESS" : "FAILED",
+                        nil
+                    ))
+                    isLoading = false
+                    if (verifyResult && advertisingData?.productId == 0xd) {
+                        // 只有网关可写到0015
+                        toCommonCharacteristic = false
+                    } else {
+                        toCommonCharacteristic = true
+                    }
+                }
+            }
+            Button("连接并绑定") {
+                print("blue", "start connect")
+                isLoading = true
+                toCommonCharacteristic = true
+                debugCommands.append(DebugCommand("Connecting and Bind!",
+                    deviceMacParsedFromMac,
+                    QpUtils.wrapProtocol(1, data: inputToken.toData())
+                ))
+                
+                qingpingDevice?.connectBind(tokenString: inputToken, connectionChange: self.onDeviceConnectionChanged) { bindResult in
+                    print("blue", "connectBind: = \(bindResult)")
+                    debugCommands.append(DebugCommand(
+                        "[Bind] Result",
+                        bindResult ? "SUCCESS" : "FAILED",
+                        nil
+                    ))
+                    isLoading = false
+                    if (bindResult && advertisingData?.productId == 0xd) {
+                        // 只有网关可写到0015
+                        toCommonCharacteristic = false
+                    } else {
+                        toCommonCharacteristic = true
+                    }
+                }
+            }
+        }) {
+            Text("Token: \(inputToken)")
         }
         .onAppear {
             BluetoothManager.shared.stopScan()
-            qingpingDevice.debugCommandListener = { command in
+            qingpingDevice?.debugCommandListener = { command in
                 self.debugCommands.append(command)
             }
+            
         }
         .navigationTitle(deviceMacParsedFromMac).toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -266,54 +336,14 @@ struct DetailPage: View {
                         Button(action: {
                             print("blue", "start disconnect")
                             isConnected = false
-                            qingpingDevice.disconnect()
+                            qingpingDevice?.disconnect()
                             toCommonCharacteristic = true
                         }) {
                             Image(systemName: "cable.connector.slash")
                         }
                     } else {
                         Button(action: {
-                            print("blue", "start connect")
-                            isLoading = true
-                            
-                            toCommonCharacteristic = true
-                            debugCommands.append(DebugCommand("Connecting and Bind!",
-                                deviceMacParsedFromMac,
-                                QpUtils.wrapProtocol(1, data: "AABBCCDD11".toData())
-                            ))
-                            
-                            qingpingDevice.connectBind(tokenString: "AABBCCDD11", connectionChange: (
-                                onConnected: { _ in
-                                    print("blue", "device connected")
-                                    debugCommands.append(DebugCommand("[Connected]",
-                                        deviceMacParsedFromMac, nil)
-                                    )
-                                    isConnected = true
-                                },
-                                onDisconnected: { _ in
-                                    print("blue", "device disconnected")
-                                    debugCommands.append(DebugCommand("[Disonnected]",
-                                        deviceMacParsedFromMac, nil)
-                                    )
-                                    isConnected = false
-                                    isLoading = false
-                                    toCommonCharacteristic = true
-                                }
-                            )) { bindResult in
-                                print("blue", "connectBind: $\(bindResult)")
-                                debugCommands.append(DebugCommand(
-                                    "[Bind] Result",
-                                    bindResult ? "SUCCESS" : "FAILED",
-                                    nil
-                                ))
-                                isLoading = false
-                                if (bindResult && advertisingData?.productId == 0xd) {
-                                    // 只有网关可写到0015
-                                    toCommonCharacteristic = false
-                                } else {
-                                    toCommonCharacteristic = true
-                                }
-                            }
+                            showConnectingDialog = true
                         }) {
                             Image(systemName: "cable.connector")
                         }
@@ -322,6 +352,16 @@ struct DetailPage: View {
                 
             }
         }
+    }
+}
+
+
+func sendMessage(_ message: String, toDevice qingpingDevice: QingpingDevice, toCommonCharacteristic: Bool, responder: @escaping CommandResponder) {
+    if (!toCommonCharacteristic) {
+        // 通常是指网关的命令，或其它设备的高级命令
+        qingpingDevice.writeCommand(command: QpUtils.hexToData(hexString: message), responder: responder)
+    } else {
+        qingpingDevice.writeInternalCommand(command: QpUtils.hexToData(hexString: message), responder: responder)
     }
 }
 
@@ -340,15 +380,28 @@ struct Inputer: View {
                         if (text.isEmpty) {
                             Divider()
                         } else {
-                            Button(text, systemImage: targetUuid == hex ? "checkmark" : "", role: .cancel) {
-                                if (!hex.isEmpty) {
-                                    onSendMessage(hex)
+                            if (targetUuid == hex) {
+                                Button(text, systemImage:  "checkmark.circle") {
+                                    if (!hex.isEmpty) {
+                                        onSendMessage(hex)
+                                    }
+                                    
+                                    if let newHex = onClick?(index) {
+                                        onSendMessage(newHex)
+                                    }
                                 }
-                                
-                                if let newHex = onClick?(index) {
-                                    onSendMessage(newHex)
+                            } else {
+                                Button(text) {
+                                    if (!hex.isEmpty) {
+                                        onSendMessage(hex)
+                                    }
+                                    
+                                    if let newHex = onClick?(index) {
+                                        onSendMessage(newHex)
+                                    }
                                 }
                             }
+                            
                         }
                     
                     }
@@ -413,8 +466,9 @@ struct KeyboardKey: View {
         }
     }
 }
-#Preview {
-    NavigationView(content: {
-//        DetailPage()
-    })
-}
+
+
+
+//#Preview {
+////    E()
+//}

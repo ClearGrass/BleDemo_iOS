@@ -71,7 +71,9 @@ class QingpingDevice: NSObject, CBPeripheralDelegate, PeripheralCallback {
                 verify(token: token, responder: responder)
             } else {
                 if (!callOnce) {
-                    responder(false)
+                    DispatchQueue.main.async {
+                        responder(false)
+                    }
                     callOnce = true
                 }
             }
@@ -83,11 +85,13 @@ class QingpingDevice: NSObject, CBPeripheralDelegate, PeripheralCallback {
         writeInternalCommand(command: QpUtils.wrapProtocol(2, data: token)) { [self] response in
             if let qprotocol = QpUtils.parseProtocol(dataBytes: response) {
                 if (!callOnce) {
-                    responder(qprotocol.resultSuccess)
+                    DispatchQueue.main.async {
+                        responder(qprotocol.resultSuccess)
+                    }
                     callOnce = true
                 }
                 if (qprotocol.resultSuccess) {
-                    writeInternalCommand(command: QpUtils.wrapProtocol(0xD)) { [self] response in
+                    writeInternalCommand(command: QpUtils.wrapProtocol(0x0D)) { [self] response in
                         if let readChara = self.peripheral.findCharacteristic(withUUID: UUIDs.MY_READ, inServiceUUID: UUIDs.SERVICE) {
                             registerNotifyCallback = { result in
                                 print("blue", "registerNotify(0016): result: \(result)")
@@ -181,7 +185,9 @@ class QingpingDevice: NSObject, CBPeripheralDelegate, PeripheralCallback {
             registerNotifyCallback = { result in
                 print("blue", "registerNotify(0002): result: \(result)")
                 if result {
-                    self.onConnectedToPeripheral?(peripheral)
+                    DispatchQueue.main.async {
+                        self.onConnectedToPeripheral?(peripheral)
+                    }
                 }
             }
             peripheral.setNotifyValue(true, for: readChara)
@@ -189,7 +195,9 @@ class QingpingDevice: NSObject, CBPeripheralDelegate, PeripheralCallback {
     }
     
     func onPeripheralDisconnected(_ peripheral: CBPeripheral, withError error: Error?) {
-        self.onDisconnectedFromPeripheral?((peripheral, error))
+        DispatchQueue.main.async {
+            self.onDisconnectedFromPeripheral?((peripheral, error))
+        }
     }
     
     func onSetNotifyperipheral(_ peripheral: CBPeripheral, characteristic: CBCharacteristic, withResult result: Bool) {
@@ -302,6 +310,7 @@ internal class ResponseCollector {
         return collect(fromUUID: uuidAndData.uuid, data: uuidAndData.data)
     }
     public func collect(fromUUID: CBUUID, data: Data) {
+        print("blue", "collect \(fromUUID.simple()) \(data.display())", "waiting=\(waitingType) waitingChara=\(waitingCharacteristic?.uuidString) nextResponder=\(nextResponder)")
         if (waitingCharacteristic != fromUUID) {
             // 如果不是目标特征的响应 则忽略
             return
@@ -334,6 +343,7 @@ internal class ResponseCollector {
         }
 
         isCollecting = true;
+        print("parse data pager \(reponseHasMultiPage)")
         if let qprotocol = QpUtils.parseProtocol(dataBytes: data, withPage: reponseHasMultiPage) {
             if (qprotocol.type == waitingType) {
                 respMap[qprotocol.page] = qprotocol.data!
