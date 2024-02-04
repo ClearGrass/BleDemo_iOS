@@ -9,7 +9,7 @@ import Foundation
 import CoreBluetooth
 
 typealias UUIDAndData = (uuid: CBUUID, data: Data)
-typealias ValueCallback<T> = ((T) -> ())?
+typealias ValueCallback<T> = ((T) -> ())
 typealias ActionResult = ValueCallback<Bool>
 typealias CommandResponder = (Data) -> ()
 
@@ -35,18 +35,18 @@ class QingpingDevice: NSObject, CBPeripheralDelegate, PeripheralCallback {
         }
     }
         
-    private var onConnectedToPeripheral: OnConnectedToPeripheral = nil;
-    private var onDisconnectedFromPeripheral: OnDisconnectedFromPeripheral = nil;
-    private var connectCallback: ActionResult = nil;
-    private var registerNotifyCallback: ActionResult = nil;
-    private var readCallback: ValueCallback<UUIDAndData> = nil;
-    private var readRSSICallback: ValueCallback<Int> = nil;
-    private var writeCallback: ActionResult = nil;
+    private var onConnectedToPeripheral: OnConnectedToPeripheral? = nil;
+    private var onDisconnectedFromPeripheral: OnDisconnectedFromPeripheral? = nil;
+    private var connectCallback: ActionResult? = nil;
+    private var registerNotifyCallback: ActionResult? = nil;
+    private var readCallback: ValueCallback<UUIDAndData>? = nil;
+    private var readRSSICallback: ValueCallback<Int>? = nil;
+    private var writeCallback: ActionResult? = nil;
     
     private let reponseCollector = ResponseCollector();
     
-    private var debugCommandListener: (DebugCommand) -> Void = { command in
-        print("blue", "debugCommandListener not set. ", command, command.data?.display())
+    public var debugCommandListener: (DebugCommand) -> Void = { command in
+        print("blue", "debugCommandListener not set. ", command, command.data?.display() ?? "0x")
     }
     
     init(peripheral: CBPeripheral, rssi: Int = -100) {
@@ -64,26 +64,26 @@ class QingpingDevice: NSObject, CBPeripheralDelegate, PeripheralCallback {
         BluetoothManager.shared.disconnect(peripheral)
     }
     
-    private func bind(token: Data, responder: ActionResult) {
+    private func bind(token: Data, responder: @escaping ActionResult) {
         var callOnce = false
         writeInternalCommand(command: QpUtils.wrapProtocol(1, data: token)) { [self] response in
             if let qprotocol = QpUtils.parseProtocol(dataBytes: response), qprotocol.resultSuccess {
                 verify(token: token, responder: responder)
             } else {
                 if (!callOnce) {
-                    responder!(false)
+                    responder(false)
                     callOnce = true
                 }
             }
         }
     }
     
-    private func verify(token: Data, responder: ActionResult) {
+    private func verify(token: Data, responder: @escaping ActionResult) {
         var callOnce = false
         writeInternalCommand(command: QpUtils.wrapProtocol(2, data: token)) { [self] response in
             if let qprotocol = QpUtils.parseProtocol(dataBytes: response) {
                 if (!callOnce) {
-                    responder!(qprotocol.resultSuccess)
+                    responder(qprotocol.resultSuccess)
                     callOnce = true
                 }
                 if (qprotocol.resultSuccess) {
@@ -100,29 +100,41 @@ class QingpingDevice: NSObject, CBPeripheralDelegate, PeripheralCallback {
         }
     }
     
-    func connectBind(tokenString: String, connectionChange: ConnectionStatusChanged) {
+    func connectBind(tokenString: String, connectionChange: ConnectionStatusChanged, responder: @escaping ActionResult) {
         connect(connectionChange: (
             onConnected: { [self] peripheral in
+                connectionChange.onConnected(peripheral)
                 bind(token: tokenString.toData()) { result in
-                    if (result) {
-                        connectionChange.onConnected!(peripheral)
-                    }
+                    self.onConnectedToPeripheral = connectionChange.onConnected
+                    self.onDisconnectedFromPeripheral = connectionChange.onDisconnected
+                    responder(result)
                 }
             },
-            onDisconnected: connectionChange.onDisconnected
+            onDisconnected: { [self] arg0 in
+                connectionChange.onDisconnected(arg0)
+                self.onDisconnectedFromPeripheral = connectionChange.onDisconnected
+                responder(false)
+            }
         ))
     }
     
-    func connectVerify(tokenString: String, connectionChange: ConnectionStatusChanged) {
+    func connectVerify(tokenString: String, connectionChange: ConnectionStatusChanged, responder: @escaping ActionResult) {
         connect(connectionChange: (
             onConnected: { [self] peripheral in
+                connectionChange.onConnected(peripheral)
                 verify(token: tokenString.toData()) { result in
                     if (result) {
-                        connectionChange.onConnected!(peripheral)
+                        self.onConnectedToPeripheral = connectionChange.onConnected
+                        self.onDisconnectedFromPeripheral = connectionChange.onDisconnected
+                        responder(result)
                     }
                 }
             },
-            onDisconnected: connectionChange.onDisconnected
+            onDisconnected: { [self] arg0 in
+                connectionChange.onDisconnected(arg0)
+                self.onDisconnectedFromPeripheral = connectionChange.onDisconnected
+                responder(false)
+            }
         ))
     }
     
@@ -141,7 +153,7 @@ class QingpingDevice: NSObject, CBPeripheralDelegate, PeripheralCallback {
             return;
         }
         reponseCollector.off()
-        try! reponseCollector.setResponder(type: command[1], fromCharacteristic: UUIDs.COMMON_READ, responder: responder)
+        try! reponseCollector.setResponder(type: command[1], fromCharacteristic: UUIDs.MY_READ, responder: responder)
         debugCommandListener(DebugCommand("write", "0015", command))
         writeValue(command, toCharacteristic: UUIDs.MY_WRITE, inService: UUIDs.SERVICE)
     }
