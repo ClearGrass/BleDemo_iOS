@@ -343,7 +343,6 @@ internal class ResponseCollector {
         }
 
         isCollecting = true;
-        print("parse data pager \(reponseHasMultiPage)")
         if let qprotocol = QpUtils.parseProtocol(dataBytes: data, withPage: reponseHasMultiPage) {
             if (qprotocol.type == waitingType) {
                 respMap[qprotocol.page] = qprotocol.data!

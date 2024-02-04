@@ -17,6 +17,8 @@
 		B588B7272B68FCE90062CAFD /* BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B588B7262B68FCE90062CAFD /* BluetoothManager.swift */; };
 		B588B7292B6A26260062CAFD /* QingpingDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = B588B7282B6A26260062CAFD /* QingpingDevice.swift */; };
 		B588B72B2B6A38B50062CAFD /* UUIDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = B588B72A2B6A38B50062CAFD /* UUIDs.swift */; };
+		B5CD225D2B6F88EA006BFB5C /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CD225C2B6F88EA006BFB5C /* DetailView.swift */; };
+		B5CD225F2B6F9714006BFB5C /* Inputer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CD225E2B6F9714006BFB5C /* Inputer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +35,8 @@
 		B588B7262B68FCE90062CAFD /* BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManager.swift; sourceTree = "<group>"; };
 		B588B7282B6A26260062CAFD /* QingpingDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QingpingDevice.swift; sourceTree = "<group>"; };
 		B588B72A2B6A38B50062CAFD /* UUIDs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UUIDs.swift; sourceTree = "<group>"; };
+		B5CD225C2B6F88EA006BFB5C /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
+		B5CD225E2B6F9714006BFB5C /* Inputer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Inputer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,10 +73,12 @@
 				B52734E12B6B959400FB37E4 /* Info.plist */,
 				B588B7162B68FC330062CAFD /* BleDemoApp.swift */,
 				B588B7182B68FC330062CAFD /* ContentView.swift */,
+				B5CD225C2B6F88EA006BFB5C /* DetailView.swift */,
 				B58268FC2B6B74BF00F1ED22 /* ScanResultDevice.swift */,
 				B588B71A2B68FC340062CAFD /* Assets.xcassets */,
 				B588B71C2B68FC340062CAFD /* BleDemo.entitlements */,
 				B588B71D2B68FC340062CAFD /* Preview Content */,
+				B5CD225E2B6F9714006BFB5C /* Inputer.swift */,
 			);
 			path = BleDemo;
 			sourceTree = "<group>";
@@ -168,11 +174,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				B588B7292B6A26260062CAFD /* QingpingDevice.swift in Sources */,
+				B5CD225D2B6F88EA006BFB5C /* DetailView.swift in Sources */,
 				B588B7192B68FC330062CAFD /* ContentView.swift in Sources */,
 				B588B72B2B6A38B50062CAFD /* UUIDs.swift in Sources */,
 				B58268FD2B6B74BF00F1ED22 /* ScanResultDevice.swift in Sources */,
 				B58268FF2B6B75D900F1ED22 /* ScanResultParsed.swift in Sources */,
 				B588B7272B68FCE90062CAFD /* BluetoothManager.swift in Sources */,
+				B5CD225F2B6F9714006BFB5C /* Inputer.swift in Sources */,
 				B588B7172B68FC330062CAFD /* BleDemoApp.swift in Sources */,
 				B58268FB2B6B507B00F1ED22 /* DataExtensions.swift in Sources */,
 			);
