@@ -17,8 +17,13 @@ typealias OnConnectedToPeripheral = ValueCallback<CBPeripheral>
 typealias OnDisconnectedFromPeripheral = ValueCallback<(peripheral: CBPeripheral, error: Error?)>
 typealias ConnectionStatusChanged = (onConnected: OnConnectedToPeripheral, onDisconnected: OnDisconnectedFromPeripheral)
 
-
-typealias DebugCommand = (action: String, uuid: String, data: Data?)
+struct DebugCommand {
+    let id = UUID()
+    let action: String
+    let uuid: String
+    let data: Data?
+}
+//typealias DebugCommand = (action: String, uuid: String, data: Data?)
 
 class QingpingDevice: NSObject, CBPeripheralDelegate, PeripheralCallback {
     let peripheral: CBPeripheral
@@ -71,9 +76,7 @@ class QingpingDevice: NSObject, CBPeripheralDelegate, PeripheralCallback {
                 verify(token: token, responder: responder)
             } else {
                 if (!callOnce) {
-                    DispatchQueue.main.async {
-                        responder(false)
-                    }
+                    responder(false)
                     callOnce = true
                 }
             }
@@ -85,9 +88,7 @@ class QingpingDevice: NSObject, CBPeripheralDelegate, PeripheralCallback {
         writeInternalCommand(command: QpUtils.wrapProtocol(2, data: token)) { [self] response in
             if let qprotocol = QpUtils.parseProtocol(dataBytes: response) {
                 if (!callOnce) {
-                    DispatchQueue.main.async {
-                        responder(qprotocol.resultSuccess)
-                    }
+                    responder(qprotocol.resultSuccess)
                     callOnce = true
                 }
                 if (qprotocol.resultSuccess) {
@@ -148,7 +149,7 @@ class QingpingDevice: NSObject, CBPeripheralDelegate, PeripheralCallback {
         }
         reponseCollector.off()
         try! reponseCollector.setResponder(type: command[1], fromCharacteristic: UUIDs.COMMON_READ, responder: responder)
-        debugCommandListener(DebugCommand("write", "0001", command))
+        debugCommandListener(DebugCommand(action: "write", uuid: "0001", data: command))
         writeValue(command, toCharacteristic: UUIDs.COMMON_WRITE, inService: UUIDs.SERVICE)
     }
     
@@ -158,7 +159,7 @@ class QingpingDevice: NSObject, CBPeripheralDelegate, PeripheralCallback {
         }
         reponseCollector.off()
         try! reponseCollector.setResponder(type: command[1], fromCharacteristic: UUIDs.MY_READ, responder: responder)
-        debugCommandListener(DebugCommand("write", "0015", command))
+        debugCommandListener(DebugCommand(action: "write", uuid: "0015", data: command))
         writeValue(command, toCharacteristic: UUIDs.MY_WRITE, inService: UUIDs.SERVICE)
     }
     
@@ -310,7 +311,6 @@ internal class ResponseCollector {
         return collect(fromUUID: uuidAndData.uuid, data: uuidAndData.data)
     }
     public func collect(fromUUID: CBUUID, data: Data) {
-        print("blue", "collect \(fromUUID.simple()) \(data.display())", "waiting=\(waitingType) waitingChara=\(waitingCharacteristic?.uuidString) nextResponder=\(nextResponder)")
         if (waitingCharacteristic != fromUUID) {
             // 如果不是目标特征的响应 则忽略
             return

@@ -109,10 +109,14 @@ struct ContentView: View {
                 }
             }
             .frame(alignment: .top)
+            .scrollDismissesKeyboard(.immediately)
             
         }.onAppear {
             BluetoothManager.shared.setOnBleStateChanged { state in
-                bleStateReady = state == CBManagerState.poweredOn
+                print("blue", "ui state=\(state.rawValue)")
+                DispatchQueue.main.async {
+                    bleStateReady = state == CBManagerState.poweredOn
+                }
             }
         }
     }
@@ -129,9 +133,9 @@ struct FilterBar: View {
             Text("产品")
             Picker("products", selection: $selectedPrd) {
                 Text("不限").lineLimit(1).tag(0)
-                Text("网关").lineLimit(1).tag(0xd)
-                Text("门窗传感器").lineLimit(1).tag(0x4)
-                Text("人体传感器").lineLimit(1).tag(0x12)
+                Text("网关(0x0D)").lineLimit(1).tag(0xd)
+                Text("门窗传感器(0x04)").lineLimit(1).tag(0x4)
+                Text("人体传感器(0x12)").lineLimit(1).tag(0x12)
             }.frame(width: 120)
             .disabled(isLoading)
             Toggle(isOn: $onlyPairing) {
@@ -176,7 +180,7 @@ struct DetailPage: View {
     
     @State var toCommonCharacteristic = true
     @State var debugCommands: [DebugCommand] = [
-        DebugCommand("init","0000",nil)
+        DebugCommand(action: "init",uuid: "0000",data: nil)
     ]
     @State var qingpingDevice: QingpingDevice?
     var deviceMacParsedFromMac: String {
@@ -186,12 +190,12 @@ struct DetailPage: View {
         return (
             onConnected: { _ in
                 print("blue", "device connected")
-                debugCommands.append(DebugCommand("[Connected]", deviceMacParsedFromMac, nil))
+                debugCommands.append(DebugCommand(action: "[Connected]", uuid: deviceMacParsedFromMac, data: nil))
                 isConnected = true
             },
             onDisconnected: { _ in
                 print("blue", "device disconnected")
-                debugCommands.append(DebugCommand("[Disonnected]", deviceMacParsedFromMac, nil))
+                debugCommands.append(DebugCommand(action: "[Disonnected]", uuid: deviceMacParsedFromMac, data: nil))
                 isConnected = false
                 isLoading = false
                 toCommonCharacteristic = true
@@ -200,21 +204,34 @@ struct DetailPage: View {
     }
     var body: some View {
         VStack() {
-            List() {
-                Section(content: {
-                    Text((advertisingData?.rawData.display())!)
-                }, header: {Text(deviceName)}) {
-                    Text("\(uuid.uuidString)")
-                }
-                Section {
-                    ForEach(debugCommands.indices, id: \.self) { index in
-                        Text(
-                            ((debugCommands[index].action
-                             + "   -> "
-                             + debugCommands[index].uuid
-                             ) + (debugCommands[index].data?.display(prefix:"\n0x") ?? "")
-                            ).trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                        )
+            ScrollViewReader { scrollView  in
+                List() {
+                    Section(content: {
+                        Text((advertisingData?.rawData.display())!)
+                    }, header: {Text(deviceName)}) {
+                        Text("\(uuid.uuidString)")
+                    }
+                    Section {
+                        ForEach(debugCommands, id: \.id) { cmd in
+                            VStack(alignment: .leading) {
+                                Text(
+                                    ((cmd.action
+                                      + "   -> "
+                                      + cmd.uuid
+                                     ) + (cmd.data?.display(prefix:"\n0x") ?? "")
+                                    ).trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                                )
+                                if let data: Data = cmd.data, (data.count > 5 && !data[1].isFF()) {
+                                    Text(
+                                        "[string: \(Data(data.subdata(in: 2..<data.count)).string().replacing("\t", with: "\n"))]"
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }.onChange(of: debugCommands.count) { _, _ in
+                    if let lastid = debugCommands.last?.id {
+                        scrollView.scrollTo(lastid)
                     }
                 }
             }
@@ -246,42 +263,44 @@ struct DetailPage: View {
                         // WIFI列表
                         if (response[0].isFF() && response[1] == 0x7) {
                             // 这是WIFI 列表
-                            debugCommands.append(DebugCommand("parse", "WIFI列表", response))
+                            debugCommands.append(DebugCommand(action: "parse", uuid: "WIFI列表", data: response))
                         }
 
                         // 连接WIFI结果
                         if (response[1] == 0x01) {
-                            debugCommands.append(DebugCommand("parse", (response[2] == 1) ? "连接WIFI成功" : "连接WIFI失败", response))
+                            debugCommands.append(DebugCommand(action: "parse", uuid: (response[2] == 1) ? "连接WIFI成功" : "连接WIFI失败", data: response))
                         }
                     } else {
                         if (response[0].isFF() && response[1] == 0x1e) {
                             // 这是 client_id
                             debugCommands.append(DebugCommand(
-                                "parse",
-                                "0002; client_id",
-                                response
+                                action: "parse",
+                                uuid: "0002; client_id",
+                                data: response
                             ))
                         }
                     }
                 }
             }
-        }.confirmationDialog("请问执行【连接验证】还是执行【连接并绑定】设备？", isPresented: $showConnectingDialog, titleVisibility: .visible, actions: {
+        }
+        .scrollDismissesKeyboard(.interactively)
+        .confirmationDialog("请问执行【连接验证】还是执行【连接并绑定】设备？", isPresented: $showConnectingDialog, titleVisibility: .visible, actions: {
             Button("连接验证") { [self]
                 print("blue", "start connect")
                 isLoading = true
                 
                 toCommonCharacteristic = true
-                debugCommands.append(DebugCommand("Connecting and Verify!",
-                    deviceMacParsedFromMac,
-                    QpUtils.wrapProtocol(1, data: inputToken.toData())
+                debugCommands.append(DebugCommand(action: "Connecting and Verify!",
+                                                  uuid: deviceMacParsedFromMac,
+                                                  data: QpUtils.wrapProtocol(1, data: inputToken.toData())
                 ))
                 
                 qingpingDevice?.connectVerify(tokenString: inputToken, connectionChange: self.onDeviceConnectionChanged){ verifyResult in
                     print("blue", "connectVerify: = \(verifyResult)")
                     debugCommands.append(DebugCommand(
-                        "[Verify] Result",
-                        verifyResult ? "SUCCESS" : "FAILED",
-                        nil
+                        action: "[Verify] Result",
+                        uuid: verifyResult ? "SUCCESS" : "FAILED",
+                        data: nil
                     ))
                     isLoading = false
                     if (verifyResult && advertisingData?.productId == 0xd) {
@@ -296,17 +315,17 @@ struct DetailPage: View {
                 print("blue", "start connect")
                 isLoading = true
                 toCommonCharacteristic = true
-                debugCommands.append(DebugCommand("Connecting and Bind!",
-                    deviceMacParsedFromMac,
-                    QpUtils.wrapProtocol(1, data: inputToken.toData())
+                debugCommands.append(DebugCommand(action: "Connecting and Bind!",
+                                                  uuid:deviceMacParsedFromMac,
+                                                  data: QpUtils.wrapProtocol(1, data: inputToken.toData())
                 ))
                 
                 qingpingDevice?.connectBind(tokenString: inputToken, connectionChange: self.onDeviceConnectionChanged) { bindResult in
                     print("blue", "connectBind: = \(bindResult)")
                     debugCommands.append(DebugCommand(
-                        "[Bind] Result",
-                        bindResult ? "SUCCESS" : "FAILED",
-                        nil
+                        action: "[Bind] Result",
+                        uuid: bindResult ? "SUCCESS" : "FAILED",
+                        data: nil
                     ))
                     isLoading = false
                     if (bindResult && advertisingData?.productId == 0xd) {
