@@ -8,41 +8,38 @@
 import Foundation
 import SwiftUI
 
-typealias MenuClicked = (Int) -> Void
+typealias MenuClicked = (Int, _ onCommandCreated: ((String) -> Void)?) -> Void
 
 struct Inputer: View {
     @State var inputText = ""
     let enabled: Bool
-    let targetUuid: String
+    @Binding var toCommonCharacteristic: Bool
     let menuItems: Array<(text: String, hex: String, onMenuClick: MenuClicked? )>
     let onSendMessage: (String) -> Void
     var body: some View {
         VStack {
             HStack {
                 Menu {
+                    Button("写到0001", systemImage:  toCommonCharacteristic ? "checkmark.circle": "cirle") {
+                        toCommonCharacteristic = true
+                    }
+                    
+                    Button("写到0015", systemImage:  !toCommonCharacteristic ? "checkmark.circle": "cirle") {
+                        toCommonCharacteristic = false
+                    }
+                    Divider()
                     ForEach(0 ..< menuItems.count) { index in
                         let (text, hex, onMenuClick) = menuItems[index]
-                        if (text.isEmpty) {
-                            Divider()
-                        } else {
-                            if (targetUuid == hex) {
-                                Button(text, systemImage:  "checkmark.circle") {
-                                    if (!hex.isEmpty) {
-                                        onSendMessage(hex)
-                                    }
-                                    onMenuClick?(index)
-                                }
-                            } else {
-                                Button(text) {
-                                    if (!hex.isEmpty) {
-                                        onSendMessage(hex)
-                                    }
-                                    onMenuClick?(index)
+                        Button(text) {
+                            if (!hex.isEmpty) {
+                                onSendMessage(hex)
+                            }
+                            onMenuClick?(index) { newHex in
+                                if !newHex.isEmpty {
+                                    onSendMessage(newHex)
                                 }
                             }
-                            
                         }
-                    
                     }
                 } label: {
                     Image(systemName: "filemenu.and.selection").padding()
@@ -105,3 +102,81 @@ struct KeyboardKey: View {
         }
     }
 }
+
+
+
+
+typealias OnWifiInput = ((_ ssid: String, _ pass: String) -> ())
+
+struct WifiInputer: View {
+    @State var inputSSID = ""
+    @State var inputPass = ""
+    @FocusState private var keyboardFocused: Bool
+    @Binding var showing: Bool
+    @Binding var onInputSsidPass: OnWifiInput?
+    var body: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            HStack() {
+                Text("SSID")
+                TextField(
+                    "SSID", text: $inputSSID
+                )
+                .focused($keyboardFocused)
+                .keyboardType(.alphabet)
+                .font(.system(size: 18))
+                .padding(10)
+                .border(.gray)
+                .padding(10)
+                .frame(maxWidth: .infinity)
+                .focusable()
+            }
+            HStack() {
+                Text("Pass")
+                TextField(
+                    "Password", text: $inputPass
+                )
+                .keyboardType(.alphabet)
+                .font(.system(size: 18))
+                .padding(10)
+                .border(.gray)
+                .padding(10)
+                .frame(maxWidth: .infinity)
+            }
+        }.frame(maxWidth: .infinity).padding(30)
+            .onAppear {
+                UITextField.appearance().clearButtonMode = .whileEditing
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    keyboardFocused = true
+                }
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("连接") {
+                        self.onInputSsidPass?(inputSSID, inputPass)
+                        onInputSsidPass = nil
+                    }
+                }
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("取消") {
+//                        onInputSsidPass = nil
+                    }
+                }
+            }
+    }
+}
+
+
+struct FakeForWifi : View {
+    @State var show = false
+    @State var callback: OnWifiInput? = {ssid, pass in
+    }
+    var body: some View {
+        WifiInputer(showing: $show, onInputSsidPass: $callback)
+    }
+}
+
+#Preview(body: {
+    NavigationView(content: {
+        FakeForWifi()
+    })
+})

@@ -12,6 +12,9 @@ import CoreBluetooth
 struct DetailPage: View {
     
     @State var showConnectingDialog = false
+    @State var showInputWiFi = false
+    @State var onInputWiFiSsidPass: OnWifiInput? = {ssid, pass in
+    }
     @State var inputToken = "ABCDEFGHIJK"
     var uuid = UUID()
     var deviceName = "蓝牙设备"
@@ -80,17 +83,17 @@ struct DetailPage: View {
             Inputer(
                 enabled: true || !isLoading && isConnected,
                 // 网关有0015特征，其它没有。
-                targetUuid: toCommonCharacteristic ? "0x0001" : (advertisingData?.productId == 0xd ? "0x0015" : "0x0001"),
+                toCommonCharacteristic: $toCommonCharacteristic,
                 menuItems: (advertisingData?.productId == 0xd ? [
-                    ("写到0001", "0x0001", { index in
-                        toCommonCharacteristic = true
-                    }),
-                    ("写到0015", "0x0015", { index in
-                        toCommonCharacteristic = false
-                    }),
-                    ("", "", nil),
                     ("AP LIST(07)", "0107", nil),
-                    ("连接WIFI(01)", "", nil),
+                    ("连接WIFI(01)", "", { index, onCommandCreated in
+                        showInputWiFi = true
+                        onInputWiFiSsidPass = {ssid, pass in
+                            let wifidata = QpUtils.wrapProtocol(1, data: "\"\(ssid)\",\"\(pass)\"".toData())
+                            debugCommands.append(DebugCommand(action: "input", uuid: "WIFI信息", data: wifidata))
+                            onCommandCreated?(wifidata.display())
+                        }
+                    }),
                     ("client_id(1E)", "011E", nil)
                 ].reversed(): [])
             ) { message in
@@ -177,6 +180,15 @@ struct DetailPage: View {
         }) {
             Text("Token: \(inputToken)")
         }
+        .sheet(isPresented: $showInputWiFi, onDismiss: {
+            showInputWiFi = false
+            onInputWiFiSsidPass = nil
+        },  content: {
+            NavigationView {
+                WifiInputer(showing: $showInputWiFi, onInputSsidPass: $onInputWiFiSsidPass)
+            }.presentationDetents([.height(200)])
+            .presentationDragIndicator(.automatic)
+        })
         .onAppear {
             BluetoothManager.shared.stopScan()
             qingpingDevice?.debugCommandListener = { command in
