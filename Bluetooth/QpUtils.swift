@@ -60,7 +60,7 @@ class QpUtils {
     }
     
     static func hexToData(hexString: String) -> Data {
-        let randomHex = try! hexString
+        let randomHex = hexString
             .replacing(pattern: "^0x", with: "")
             .replacing(pattern: "[^0-9A-Fa-f]", with: "")
             .uppercased()
@@ -68,7 +68,8 @@ class QpUtils {
         var data = Data(capacity: randomHex.count / 2)
         
         let regex = try! NSRegularExpression(pattern: "[0-9ABCDEF]{2}", options: .caseInsensitive)
-        regex.matches(in: randomHex, range: NSRangeFromString(randomHex)).forEach { nstext in
+        let range = NSMakeRange(0, (randomHex as NSString).length)
+        regex.matches(in: randomHex, range: range).forEach { nstext in
             let subs = randomHex[Range(nstext.range, in: randomHex)!]
             let num = UInt8(subs, radix: 16)!
             data.append(num)
