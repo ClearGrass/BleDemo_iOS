@@ -19,6 +19,8 @@
 		B588B72B2B6A38B50062CAFD /* UUIDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = B588B72A2B6A38B50062CAFD /* UUIDs.swift */; };
 		B5CD225D2B6F88EA006BFB5C /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CD225C2B6F88EA006BFB5C /* DetailView.swift */; };
 		B5CD225F2B6F9714006BFB5C /* Inputer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CD225E2B6F9714006BFB5C /* Inputer.swift */; };
+		B5CD22612B7085E9006BFB5C /* CBPeripheralExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CD22602B7085E9006BFB5C /* CBPeripheralExtension.swift */; };
+		B5CD22632B7088F1006BFB5C /* QpUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CD22622B7088F1006BFB5C /* QpUtils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +39,8 @@
 		B588B72A2B6A38B50062CAFD /* UUIDs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UUIDs.swift; sourceTree = "<group>"; };
 		B5CD225C2B6F88EA006BFB5C /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		B5CD225E2B6F9714006BFB5C /* Inputer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Inputer.swift; sourceTree = "<group>"; };
+		B5CD22602B7085E9006BFB5C /* CBPeripheralExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBPeripheralExtension.swift; sourceTree = "<group>"; };
+		B5CD22622B7088F1006BFB5C /* QpUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QpUtils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,8 +101,10 @@
 				B588B7262B68FCE90062CAFD /* BluetoothManager.swift */,
 				B588B7282B6A26260062CAFD /* QingpingDevice.swift */,
 				B588B72A2B6A38B50062CAFD /* UUIDs.swift */,
-				B58268FA2B6B507B00F1ED22 /* DataExtensions.swift */,
 				B58268FE2B6B75D900F1ED22 /* ScanResultParsed.swift */,
+				B58268FA2B6B507B00F1ED22 /* DataExtensions.swift */,
+				B5CD22602B7085E9006BFB5C /* CBPeripheralExtension.swift */,
+				B5CD22622B7088F1006BFB5C /* QpUtils.swift */,
 			);
 			path = Bluetooth;
 			sourceTree = "<group>";
@@ -173,7 +179,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5CD22612B7085E9006BFB5C /* CBPeripheralExtension.swift in Sources */,
 				B588B7292B6A26260062CAFD /* QingpingDevice.swift in Sources */,
+				B5CD22632B7088F1006BFB5C /* QpUtils.swift in Sources */,
 				B5CD225D2B6F88EA006BFB5C /* DetailView.swift in Sources */,
 				B588B7192B68FC330062CAFD /* ContentView.swift in Sources */,
 				B588B72B2B6A38B50062CAFD /* UUIDs.swift in Sources */,
