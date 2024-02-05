@@ -141,24 +141,24 @@ class QingpingDevice: NSObject, PeripheralCallback {
         ))
     }
     
-    func writeInternalCommand(command: Data, responder: @escaping CommandResponder) {
+    func writeInternalCommand(command: Data, responder: @escaping CommandResponder, withCallback writeCallback: ActionResult? = nil) {
         if (command.count < 2) {
             return;
         }
         reponseCollector.off()
         try! reponseCollector.setResponder(type: command[1], fromCharacteristic: UUIDs.COMMON_READ, responder: responder)
         debugCommandListener(DebugCommand(action: "write", uuid: "0001", data: command))
-        writeValue(command, toCharacteristic: UUIDs.COMMON_WRITE, inService: UUIDs.SERVICE)
+        writeValue(command, toCharacteristic: UUIDs.COMMON_WRITE, inService: UUIDs.SERVICE, withCallback: writeCallback)
     }
     
-    func writeCommand(command: Data, responder: @escaping CommandResponder) {
+    func writeCommand(command: Data, responder: @escaping CommandResponder, withCallback writeCallback: ActionResult? = nil) {
         if (command.count < 2) {
             return;
         }
         reponseCollector.off()
         try! reponseCollector.setResponder(type: command[1], fromCharacteristic: UUIDs.MY_READ, responder: responder)
         debugCommandListener(DebugCommand(action: "write", uuid: "0015", data: command))
-        writeValue(command, toCharacteristic: UUIDs.MY_WRITE, inService: UUIDs.SERVICE)
+        writeValue(command, toCharacteristic: UUIDs.MY_WRITE, inService: UUIDs.SERVICE, withCallback: writeCallback)
     }
     
     /**
