@@ -128,11 +128,9 @@ class QingpingDevice: NSObject, CBPeripheralDelegate, PeripheralCallback {
             onConnected: { [self] peripheral in
                 connectionChange.onConnected(peripheral)
                 verify(token: tokenString.toData()) { result in
-                    if (result) {
-                        self.onConnectedToPeripheral = connectionChange.onConnected
-                        self.onDisconnectedFromPeripheral = connectionChange.onDisconnected
-                        responder(result)
-                    }
+                    self.onConnectedToPeripheral = connectionChange.onConnected
+                    self.onDisconnectedFromPeripheral = connectionChange.onDisconnected
+                    responder(result)
                 }
             },
             onDisconnected: { [self] arg0 in

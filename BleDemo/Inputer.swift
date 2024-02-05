@@ -152,13 +152,15 @@ struct WifiInputer: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("连接") {
+                        showing = false
                         self.onInputSsidPass?(inputSSID, inputPass)
                         onInputSsidPass = nil
                     }
                 }
                 ToolbarItem(placement: .topBarLeading) {
                     Button("取消") {
-//                        onInputSsidPass = nil
+                        showing = false
+                        onInputSsidPass = nil
                     }
                 }
             }
