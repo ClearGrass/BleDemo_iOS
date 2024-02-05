@@ -20,11 +20,11 @@ struct Inputer: View {
         VStack {
             HStack {
                 Menu {
-                    Button("写到0001", systemImage:  toCommonCharacteristic ? "checkmark.circle": "cirle") {
+                    Button("写到0001", systemImage:  toCommonCharacteristic ? "checkmark.circle": "circle") {
                         toCommonCharacteristic = true
                     }
                     
-                    Button("写到0015", systemImage:  !toCommonCharacteristic ? "checkmark.circle": "cirle") {
+                    Button("写到0015", systemImage:  !toCommonCharacteristic ? "checkmark.circle": "circle") {
                         toCommonCharacteristic = false
                     }
                     Divider()
