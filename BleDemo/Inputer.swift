@@ -47,7 +47,7 @@ struct Inputer: View {
                 
                 TextField("Command", text: $inputText, onEditingChanged: { changed in
                     if (changed) {
-                        inputText = try! inputText.uppercased().replacing(Regex("[^0-9A-F]"), with: "")
+                        inputText = inputText.uppercased().replacing(pattern: "[^0-9A-F]", with: "")
                     }
                 }) {
                     
@@ -128,7 +128,6 @@ struct WifiInputer: View {
                 .border(.gray)
                 .padding(10)
                 .frame(maxWidth: .infinity)
-                .focusable()
             }
             HStack() {
                 Text("Pass")

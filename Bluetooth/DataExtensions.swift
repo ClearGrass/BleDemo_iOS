@@ -35,13 +35,27 @@ extension UInt8 {
     }
 }
 extension String {
+    
+    func replacing(pattern: String, with withString: String) -> String {
+        let regex = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
+        return regex.stringByReplacingMatches(in: self, options: [], range: NSRange(0..<self.utf16.count), withTemplate: withString)
+    }
+    
+    func isMatching(pattern: String) -> Bool {
+        let regex = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
+        return regex.firstMatch(in: self, range: NSRange(0..<self.utf16.count)) != nil
+    }
+    
+    
     func isGoodToken() -> Bool {
-        return matches(of: try! Regex("^[0-9a-zA-Z!@#$%^&()_=]{12,16}$")).count > 1
+        return self.isMatching(pattern: "^[0-9a-zA-Z!@#$%^&()_=]{12,16}$")
     }
     func isHex() -> Bool {
-        return matches(of: try! Regex("^[0-9A-Fa-f]*$")).count > 1
+        return self.isMatching(pattern: "^[0-9A-Fa-f]*$")
     }
     func toData() -> Data {
         return self.data(using: String.Encoding.utf8)!
     }
 }
+
+

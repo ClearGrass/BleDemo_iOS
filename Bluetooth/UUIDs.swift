@@ -27,13 +27,15 @@ class UUIDHelper {
     static let UUID_BASE = "0000XXXX-0000-1000-8000-00805f9b34fb";
     static func fromString(_ uuidString: String) -> CBUUID {
         if (uuidString.count == 4) {
-            return CBUUID(string: UUID_BASE.replacing("XXXX", with: uuidString))
+            return CBUUID(string: UUID_BASE.replacing(pattern: "XXXX", with: uuidString))
         }
         return CBUUID(string: uuidString)
     }
     
     static func simpler(uuidString: String) -> String {
-        return uuidString.lowercased().replacing("-0000-1000-8000-00805f9b34fb", with: "").replacing(try! Regex("^0000"), with: "")
+        return uuidString.lowercased()
+            .replacingOccurrences(of: "-0000-1000-8000-00805f9b34fb", with: "")
+            .replacing(pattern: "^0000", with: "")
     }
 }
 extension UUID {

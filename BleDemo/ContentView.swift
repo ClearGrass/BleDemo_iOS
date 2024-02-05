@@ -27,7 +27,8 @@ struct ContentView: View {
                     return false
                 }
                 if (!filterText.isEmpty) {
-                    return d.name.lowercased().contains(filterText.lowercased()) || d.mac.replacing(try! Regex("[^0-9A-F]"), with: "").contains(filterText.uppercased())
+                    return d.name.lowercased().contains(filterText.lowercased())
+                    || d.mac.replacing(pattern: "[^0-9A-F]", with: "").contains(filterText.uppercased())
                 }
                 return true
             }

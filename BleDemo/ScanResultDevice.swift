@@ -36,7 +36,7 @@ struct ScanResultDevice: Equatable, Identifiable, Comparable {
         return data.mac
     }
     var clientId: String {
-        return data.mac.replacing(try! Regex("[^0-9A-F]"), with: "").replacing(try! Regex("^0+"), with: "")
+        return try! data.mac.replacing(pattern: "[^0-9A-F]", with: "").replacing(pattern: "^0+", with: "")
     }
     static func ==(lhs: ScanResultDevice, rhs: ScanResultDevice) -> Bool {
         return lhs.identifier == rhs.identifier
