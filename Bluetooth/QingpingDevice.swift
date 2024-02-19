@@ -73,7 +73,9 @@ class QingpingDevice: NSObject, PeripheralCallback {
         var callOnce = false
         writeInternalCommand(command: QpUtils.wrapProtocol(1, data: token)) { [self] response in
             if let qprotocol = QpUtils.parseProtocol(dataBytes: response), qprotocol.resultSuccess {
-                verify(token: token, responder: responder)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.verify(token: token, responder: responder)
+                }
             } else {
                 if (!callOnce) {
                     responder(false)
@@ -92,12 +94,14 @@ class QingpingDevice: NSObject, PeripheralCallback {
                     callOnce = true
                 }
                 if (qprotocol.resultSuccess) {
-                    writeInternalCommand(command: QpUtils.wrapProtocol(0x0D)) { [self] response in
-                        if let readChara = self.peripheral.findCharacteristic(withUUID: UUIDs.MY_READ, inServiceUUID: UUIDs.SERVICE) {
-                            registerNotifyCallback = { result in
-                                print("blue", "registerNotify(0016): result: \(result)")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.writeInternalCommand(command: QpUtils.wrapProtocol(0x0D)) { [self] response in
+                            if let readChara = self.peripheral.findCharacteristic(withUUID: UUIDs.MY_READ, inServiceUUID: UUIDs.SERVICE) {
+                                registerNotifyCallback = { result in
+                                    print("blue", "registerNotify(0016): result: \(result)")
+                                }
+                                peripheral.setNotifyValue(true, for: readChara)
                             }
-                            peripheral.setNotifyValue(true, for: readChara)
                         }
                     }
                 }
