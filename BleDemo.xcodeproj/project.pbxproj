@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B52460EE2B71EFCC00BC54AD /* TelinkGenericOTALib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B52460ED2B71EFCC00BC54AD /* TelinkGenericOTALib.framework */; };
 		B58268FB2B6B507B00F1ED22 /* DataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58268FA2B6B507B00F1ED22 /* DataExtensions.swift */; };
 		B58268FD2B6B74BF00F1ED22 /* ScanResultDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58268FC2B6B74BF00F1ED22 /* ScanResultDevice.swift */; };
 		B58268FF2B6B75D900F1ED22 /* ScanResultParsed.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58268FE2B6B75D900F1ED22 /* ScanResultParsed.swift */; };
@@ -17,6 +18,7 @@
 		B588B7272B68FCE90062CAFD /* BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B588B7262B68FCE90062CAFD /* BluetoothManager.swift */; };
 		B588B7292B6A26260062CAFD /* QingpingDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = B588B7282B6A26260062CAFD /* QingpingDevice.swift */; };
 		B588B72B2B6A38B50062CAFD /* UUIDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = B588B72A2B6A38B50062CAFD /* UUIDs.swift */; };
+		B5CBE7E82B82F92B00FA3FA3 /* Files in Resources */ = {isa = PBXBuildFile; fileRef = B5CBE7E72B82F92B00FA3FA3 /* Files */; };
 		B5CD225D2B6F88EA006BFB5C /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CD225C2B6F88EA006BFB5C /* DetailView.swift */; };
 		B5CD225F2B6F9714006BFB5C /* Inputer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CD225E2B6F9714006BFB5C /* Inputer.swift */; };
 		B5CD22612B7085E9006BFB5C /* CBPeripheralExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CD22602B7085E9006BFB5C /* CBPeripheralExtension.swift */; };
@@ -24,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B52460ED2B71EFCC00BC54AD /* TelinkGenericOTALib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = TelinkGenericOTALib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B52734E12B6B959400FB37E4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		B58268FA2B6B507B00F1ED22 /* DataExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExtensions.swift; sourceTree = "<group>"; };
 		B58268FC2B6B74BF00F1ED22 /* ScanResultDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanResultDevice.swift; sourceTree = "<group>"; };
@@ -37,6 +40,7 @@
 		B588B7262B68FCE90062CAFD /* BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManager.swift; sourceTree = "<group>"; };
 		B588B7282B6A26260062CAFD /* QingpingDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QingpingDevice.swift; sourceTree = "<group>"; };
 		B588B72A2B6A38B50062CAFD /* UUIDs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UUIDs.swift; sourceTree = "<group>"; };
+		B5CBE7E72B82F92B00FA3FA3 /* Files */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Files; sourceTree = "<group>"; };
 		B5CD225C2B6F88EA006BFB5C /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		B5CD225E2B6F9714006BFB5C /* Inputer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Inputer.swift; sourceTree = "<group>"; };
 		B5CD22602B7085E9006BFB5C /* CBPeripheralExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBPeripheralExtension.swift; sourceTree = "<group>"; };
@@ -48,18 +52,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B52460EE2B71EFCC00BC54AD /* TelinkGenericOTALib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B52460EC2B71EFCC00BC54AD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B52460ED2B71EFCC00BC54AD /* TelinkGenericOTALib.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		B588B70A2B68FC330062CAFD = {
 			isa = PBXGroup;
 			children = (
 				B588B7252B68FCD10062CAFD /* Bluetooth */,
 				B588B7152B68FC330062CAFD /* BleDemo */,
 				B588B7142B68FC330062CAFD /* Products */,
+				B52460EC2B71EFCC00BC54AD /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -74,6 +88,7 @@
 		B588B7152B68FC330062CAFD /* BleDemo */ = {
 			isa = PBXGroup;
 			children = (
+				B5CBE7E72B82F92B00FA3FA3 /* Files */,
 				B52734E12B6B959400FB37E4 /* Info.plist */,
 				B588B7162B68FC330062CAFD /* BleDemoApp.swift */,
 				B588B7182B68FC330062CAFD /* ContentView.swift */,
@@ -167,6 +182,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5CBE7E82B82F92B00FA3FA3 /* Files in Resources */,
 				B588B71F2B68FC340062CAFD /* Preview Assets.xcassets in Resources */,
 				B588B71B2B68FC340062CAFD /* Assets.xcassets in Resources */,
 			);

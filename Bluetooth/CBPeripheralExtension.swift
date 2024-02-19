@@ -8,7 +8,6 @@
 import Foundation
 import CoreBluetooth
 
-
 extension CBPeripheral {
     func findService(withUUID uuid: CBUUID) -> CBService? {
         if(self.services == nil) {

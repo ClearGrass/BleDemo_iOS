@@ -19,7 +19,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
     var onBlueAccept: BlueAcceptCallback? = nil
     var onBleStateChange: ((_ state: CBManagerState) -> Void)? = nil
     @objc dynamic var _tempDiscoverCharaCounter = 0;
-    private var centralManager: CBCentralManager!
+    public var centralManager: CBCentralManager!
     private override init() {
         centralManager = CBCentralManager(delegate: nil, queue: nil)
     }

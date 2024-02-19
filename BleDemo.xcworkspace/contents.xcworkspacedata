@@ -4,4 +4,7 @@
    <FileRef
       location = "container:BleDemo.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:TelinkGenericOTALib/TelinkGenericOTALib.xcodeproj">
+   </FileRef>
 </Workspace>

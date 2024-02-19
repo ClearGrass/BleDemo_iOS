@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import CoreBluetooth
+import TelinkGenericOTALib
 
 struct DetailPage: View {
     
@@ -81,7 +82,7 @@ struct DetailPage: View {
                 }
             }
             Inputer(
-                enabled: true || !isLoading && isConnected,
+                enabled: !isLoading && isConnected,
                 // 网关有0015特征，其它没有。
                 toCommonCharacteristic: $toCommonCharacteristic,
                 menuItems: (advertisingData?.productId == 0xd ? [
@@ -95,7 +96,50 @@ struct DetailPage: View {
                         }
                     }),
                     ("client_id(1E)", "011E", nil)
-                ].reversed(): [])
+                ].reversed(): [
+                    ("固件更新", "", { _, _ in
+                        var filename = ""
+                        if (advertisingData?.productId == 0x04) {
+                            filename = "0x04_hodor_2_1_6"
+                        } else if (advertisingData?.productId == 0x12) {
+                            filename = "0x12_parrot_2_6_0"
+                        } else {
+                            debugCommands.append(DebugCommand(action: "Upgrading", uuid: "Firmware not found 0x${device?.productType?.toString(16)}", data: nil))
+                            return
+                        }
+                        let fileUrl = Bundle.main.url(forResource: "Files/\(filename)", withExtension: "bin")!
+                        let localFile = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last!.appending(path: "\(filename).bin")
+                        if !FileManager.default.fileExists(atPath: localFile.path()) {
+                            try! FileManager.default.copyItem(at: fileUrl, to: localFile)
+                        }
+                        let fileData = try! Data(contentsOf: localFile)
+                        
+                        
+                        let otaManager = TelinkOtaManager.share()
+                        TelinkBluetoothManager.shareCentral().centralManager = BluetoothManager.shared.centralManager
+                        TelinkBluetoothManager.shareCentral().centralManager.delegate = TelinkBluetoothManager.shareCentral() as! any CBCentralManagerDelegate
+                        otaManager.startOTA(withOtaData: fileData, peripheral: qingpingDevice!.peripheral, otaProgressAction: { progress in
+                            print("progress \(progress)")
+                            if debugCommands.last?.action == "OTA_Progress" {
+                                debugCommands.remove(at: debugCommands.count - 1)
+                            }
+                            debugCommands.append(DebugCommand(action: "OTA_Progress", uuid: "\(Float(Int(progress * 1000)) / 10.0)%", data: nil))
+                        }, otaResultAction: { peripheral, err  in
+                            print("result = \(peripheral)   info = \(String(describing: err))")
+                            if let err = err {
+                                debugCommands.append(DebugCommand(action: "OTA_Error", uuid: "OTA_Error \(err)", data: nil))
+                            } else {
+                                debugCommands.append(DebugCommand(action: "OTA_Succ", uuid: "OTA_Succ", data: nil))
+                            }
+                            if (peripheral.state == .disconnected) {
+                                self.isConnected = false
+                            }
+                            self.isLoading = false
+                        })
+                        debugCommands.append(DebugCommand(action: "OTA_Start", uuid: "\(localFile.path())", data: nil))
+                        self.isLoading = true
+                    })
+                ])
             ) { message in
                 sendMessage(message, toDevice: qingpingDevice!, toCommonCharacteristic: toCommonCharacteristic) { response in
                     if (!toCommonCharacteristic) {

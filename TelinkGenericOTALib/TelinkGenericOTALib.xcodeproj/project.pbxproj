@@ -1,0 +1,368 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		257CF72F24BD44FC0053C253 /* TelinkGenericOTALib.h in Headers */ = {isa = PBXBuildFile; fileRef = 257CF72D24BD44FC0053C253 /* TelinkGenericOTALib.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		257CF74F24BD48DD0053C253 /* TelinkDeviceModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 257CF74D24BD48DD0053C253 /* TelinkDeviceModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		257CF75024BD48DD0053C253 /* TelinkDeviceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 257CF74E24BD48DD0053C253 /* TelinkDeviceModel.m */; };
+		257CF75324BD49D00053C253 /* TelinkBluetoothManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 257CF75124BD49D00053C253 /* TelinkBluetoothManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		257CF75424BD49D00053C253 /* TelinkBluetoothManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 257CF75224BD49D00053C253 /* TelinkBluetoothManager.m */; };
+		257CF75624BD4AC50053C253 /* TelinkGenericOTALibPrefixHeader.pch in Headers */ = {isa = PBXBuildFile; fileRef = 257CF75524BD4AC50053C253 /* TelinkGenericOTALibPrefixHeader.pch */; };
+		257CF75B24BD4D410053C253 /* TelinkConst.h in Headers */ = {isa = PBXBuildFile; fileRef = 257CF75924BD4D410053C253 /* TelinkConst.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		257CF75C24BD4D410053C253 /* TelinkConst.m in Sources */ = {isa = PBXBuildFile; fileRef = 257CF75A24BD4D410053C253 /* TelinkConst.m */; };
+		25BC6F6C24C68C2400CD40E9 /* TelinkOtaManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 25BC6F6A24C68C2400CD40E9 /* TelinkOtaManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		25BC6F6D24C68C2400CD40E9 /* TelinkOtaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 25BC6F6B24C68C2400CD40E9 /* TelinkOtaManager.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		257CF72A24BD44FC0053C253 /* TelinkGenericOTALib.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TelinkGenericOTALib.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		257CF72D24BD44FC0053C253 /* TelinkGenericOTALib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TelinkGenericOTALib.h; sourceTree = "<group>"; };
+		257CF72E24BD44FC0053C253 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		257CF74D24BD48DD0053C253 /* TelinkDeviceModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TelinkDeviceModel.h; sourceTree = "<group>"; };
+		257CF74E24BD48DD0053C253 /* TelinkDeviceModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TelinkDeviceModel.m; sourceTree = "<group>"; };
+		257CF75124BD49D00053C253 /* TelinkBluetoothManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TelinkBluetoothManager.h; sourceTree = "<group>"; };
+		257CF75224BD49D00053C253 /* TelinkBluetoothManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TelinkBluetoothManager.m; sourceTree = "<group>"; };
+		257CF75524BD4AC50053C253 /* TelinkGenericOTALibPrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TelinkGenericOTALibPrefixHeader.pch; sourceTree = "<group>"; };
+		257CF75924BD4D410053C253 /* TelinkConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TelinkConst.h; sourceTree = "<group>"; };
+		257CF75A24BD4D410053C253 /* TelinkConst.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TelinkConst.m; sourceTree = "<group>"; };
+		25BC6F6A24C68C2400CD40E9 /* TelinkOtaManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TelinkOtaManager.h; sourceTree = "<group>"; };
+		25BC6F6B24C68C2400CD40E9 /* TelinkOtaManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TelinkOtaManager.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		257CF72724BD44FC0053C253 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		257CF72024BD44FC0053C253 = {
+			isa = PBXGroup;
+			children = (
+				257CF72C24BD44FC0053C253 /* TelinkGenericOTALib */,
+				257CF72B24BD44FC0053C253 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		257CF72B24BD44FC0053C253 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				257CF72A24BD44FC0053C253 /* TelinkGenericOTALib.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		257CF72C24BD44FC0053C253 /* TelinkGenericOTALib */ = {
+			isa = PBXGroup;
+			children = (
+				257CF72D24BD44FC0053C253 /* TelinkGenericOTALib.h */,
+				257CF74D24BD48DD0053C253 /* TelinkDeviceModel.h */,
+				257CF74E24BD48DD0053C253 /* TelinkDeviceModel.m */,
+				257CF75124BD49D00053C253 /* TelinkBluetoothManager.h */,
+				257CF75224BD49D00053C253 /* TelinkBluetoothManager.m */,
+				25BC6F6A24C68C2400CD40E9 /* TelinkOtaManager.h */,
+				25BC6F6B24C68C2400CD40E9 /* TelinkOtaManager.m */,
+				257CF75924BD4D410053C253 /* TelinkConst.h */,
+				257CF75A24BD4D410053C253 /* TelinkConst.m */,
+				257CF75524BD4AC50053C253 /* TelinkGenericOTALibPrefixHeader.pch */,
+				257CF72E24BD44FC0053C253 /* Info.plist */,
+			);
+			path = TelinkGenericOTALib;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		257CF72524BD44FC0053C253 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				257CF72F24BD44FC0053C253 /* TelinkGenericOTALib.h in Headers */,
+				257CF75B24BD4D410053C253 /* TelinkConst.h in Headers */,
+				257CF74F24BD48DD0053C253 /* TelinkDeviceModel.h in Headers */,
+				25BC6F6C24C68C2400CD40E9 /* TelinkOtaManager.h in Headers */,
+				257CF75324BD49D00053C253 /* TelinkBluetoothManager.h in Headers */,
+				257CF75624BD4AC50053C253 /* TelinkGenericOTALibPrefixHeader.pch in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		257CF72924BD44FC0053C253 /* TelinkGenericOTALib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 257CF73224BD44FC0053C253 /* Build configuration list for PBXNativeTarget "TelinkGenericOTALib" */;
+			buildPhases = (
+				257CF72524BD44FC0053C253 /* Headers */,
+				257CF72624BD44FC0053C253 /* Sources */,
+				257CF72724BD44FC0053C253 /* Frameworks */,
+				257CF72824BD44FC0053C253 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TelinkGenericOTALib;
+			productName = TelinkGenericOTALib;
+			productReference = 257CF72A24BD44FC0053C253 /* TelinkGenericOTALib.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		257CF72124BD44FC0053C253 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1150;
+				ORGANIZATIONNAME = "梁家誌";
+				TargetAttributes = {
+					257CF72924BD44FC0053C253 = {
+						CreatedOnToolsVersion = 11.5;
+					};
+				};
+			};
+			buildConfigurationList = 257CF72424BD44FC0053C253 /* Build configuration list for PBXProject "TelinkGenericOTALib" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 257CF72024BD44FC0053C253;
+			productRefGroup = 257CF72B24BD44FC0053C253 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				257CF72924BD44FC0053C253 /* TelinkGenericOTALib */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		257CF72824BD44FC0053C253 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		257CF72624BD44FC0053C253 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				257CF75424BD49D00053C253 /* TelinkBluetoothManager.m in Sources */,
+				257CF75024BD48DD0053C253 /* TelinkDeviceModel.m in Sources */,
+				257CF75C24BD4D410053C253 /* TelinkConst.m in Sources */,
+				25BC6F6D24C68C2400CD40E9 /* TelinkOtaManager.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		257CF73024BD44FC0053C253 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		257CF73124BD44FC0053C253 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		257CF73324BD44FC0053C253 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = VE69RQCDF9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/TelinkGenericOTALib/TelinkGenericOTALibPrefixHeader.pch";
+				INFOPLIST_FILE = TelinkGenericOTALib/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				PRODUCT_BUNDLE_IDENTIFIER = com.telink.TelinkGenericOTALib;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		257CF73424BD44FC0053C253 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = VE69RQCDF9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/TelinkGenericOTALib/TelinkGenericOTALibPrefixHeader.pch";
+				INFOPLIST_FILE = TelinkGenericOTALib/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				PRODUCT_BUNDLE_IDENTIFIER = com.telink.TelinkGenericOTALib;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		257CF72424BD44FC0053C253 /* Build configuration list for PBXProject "TelinkGenericOTALib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				257CF73024BD44FC0053C253 /* Debug */,
+				257CF73124BD44FC0053C253 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		257CF73224BD44FC0053C253 /* Build configuration list for PBXNativeTarget "TelinkGenericOTALib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				257CF73324BD44FC0053C253 /* Debug */,
+				257CF73424BD44FC0053C253 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 257CF72124BD44FC0053C253 /* Project object */;
+}
