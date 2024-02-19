@@ -116,6 +116,7 @@ struct DetailPage: View {
                         
                         
                         let otaManager = TelinkOtaManager.share()
+                        otaManager.stopOTA() // 由于是单例，防止上次失败标记未清理而失败
                         TelinkBluetoothManager.shareCentral().centralManager = BluetoothManager.shared.centralManager
                         TelinkBluetoothManager.shareCentral().centralManager.delegate = TelinkBluetoothManager.shareCentral() as! any CBCentralManagerDelegate
                         otaManager.startOTA(withOtaData: fileData, peripheral: qingpingDevice!.peripheral, otaProgressAction: { progress in
