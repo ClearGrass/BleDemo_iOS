@@ -11,6 +11,7 @@ struct ScanResultDevice: Equatable, Identifiable, Comparable {
     
     init(peripheral: CBPeripheral, data: [CBUUID : Data], rssi: Int, localname: String?) {
         self.name = localname ?? peripheral.name ?? ""
+        self.fakename = peripheral.name
         self.identifier = peripheral.identifier
         self.rssi = rssi
         self.data = ScanResultParsed(fdcdData: data[CBUUID(string: "FDCD")]!)!
@@ -23,6 +24,7 @@ struct ScanResultDevice: Equatable, Identifiable, Comparable {
     }
         
     var name: String
+    var fakename: String?
     var identifier: UUID
     var rssi: Int
     var data: ScanResultParsed

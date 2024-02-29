@@ -83,6 +83,11 @@ struct ContentView: View {
                                         Spacer()
                                         Text("\(device.rssi)")
                                     }
+                                    if let fakename = device.fakename, !device.name.starts(with: fakename) {
+                                        HStack {
+                                            Text(fakename).foregroundStyle(.gray).opacity(0.3)
+                                        }
+                                    }
                                     HStack {
                                         if (device.mac.starts(with: "06:66")) {
                                             Text("clientid: \(device.clientId)")
