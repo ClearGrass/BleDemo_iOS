@@ -9,8 +9,8 @@ import Foundation
 import CoreBluetooth
 struct ScanResultDevice: Equatable, Identifiable, Comparable {
     
-    init(peripheral: CBPeripheral, data: [CBUUID : Data], rssi: Int) {
-        self.name = peripheral.name ?? ""
+    init(peripheral: CBPeripheral, data: [CBUUID : Data], rssi: Int, localname: String?) {
+        self.name = localname ?? peripheral.name ?? ""
         self.identifier = peripheral.identifier
         self.rssi = rssi
         self.data = ScanResultParsed(fdcdData: data[CBUUID(string: "FDCD")]!)!

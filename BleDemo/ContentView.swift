@@ -46,11 +46,12 @@ struct ContentView: View {
                     if (scan) {
                         scanDevice.removeAll()
                         isScanning = true
-                        BluetoothManager.shared.scan { peripheral, adver, rssi  in
+                        BluetoothManager.shared.scan { peripheral, adver, rssi, localname  in
                             let device = ScanResultDevice(
                                 peripheral: peripheral,
                                 data: adver,
-                                rssi: rssi
+                                rssi: rssi,
+                                localname: localname
                             )
                             scanDevice.removeAll { element in
                                 return element == device

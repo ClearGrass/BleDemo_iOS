@@ -8,7 +8,7 @@
 import Foundation
 import CoreBluetooth
 
-typealias BlueAcceptCallback = (_ peripheral: CBPeripheral, _ advertisementData: [CBUUID: Data], _ rssi: Int) -> Void
+typealias BlueAcceptCallback = (_ peripheral: CBPeripheral, _ advertisementData: [CBUUID: Data], _ rssi: Int, _ localname: String?) -> Void
 
 class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
    
@@ -81,7 +81,8 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
             let serviceuuid = data1.element.key.uuidString
             let data = data1.element.value
             if (serviceuuid == "FDCD") {
-                self.onBlueAccept?(peripheral, serviceDatas, RSSI.intValue)
+                let localName = advertisementData[CBAdvertisementDataLocalNameKey]
+                self.onBlueAccept?(peripheral, serviceDatas, RSSI.intValue, localName as? String)
                 break;
             }
         }
